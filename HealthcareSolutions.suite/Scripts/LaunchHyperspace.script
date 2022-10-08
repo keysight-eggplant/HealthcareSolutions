@@ -1,0 +1,56 @@
+﻿params EnvironmentName
+
+//Determine whether Hyperspace is currently open
+If ImageFound(text:"More", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("HyperspaceToolbar")) or If ImageFound(text:"Log Out", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("HyperspaceToolbar")) then
+	
+	Log "Hyperspace is already open"
+	set global HyperspaceLaunched = true
+	set global LoggedIn = true
+	Exit handler
+Else
+	
+	log "Logging into Hyperspace..."
+	
+End If
+
+//Determine whether Citrix Workspace window is open
+//Alternately determine whether Epic login screen is open
+If ImageFound(text:"Citrix Workspace", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("TopLeftQuadrant")) then
+	
+	TypeText WindowsKey,UpArrow
+	
+Else if ImageFound(imageName:"Hyperspace_SunAndMoon_Icon", waitFor:1) then
+	
+	Log "Hyperspace is displaying the login screen"
+	set global HyperspaceLaunched = true
+	Exit handler
+	
+Else
+	
+	Click "Windows_ExpandTray"
+	Click (Image:"CitrixIcon", WaitFor:2) -- Open Citrix workspace from Windows tray
+	WaitFor 5,Text:"Citrix Workspace",SearchRectangle:HandlerGarage.ScreenPart("TopLeftQuadrant")
+	TypeText WindowsKey,UpArrow
+	AddressCitrixLogin --accounts for 2FA Citrix login
+	
+End If
+
+put ImageRectangle(text:EnvironmentName, waitFor:1) + (0,-200,0,0) into EnvironmentSearchArea
+Click imageName:"EpicCitrixIcon", waitFor:1,SearchRectangle:EnvironmentSearchArea
+
+AddressCitrixLogin --accounts for 2FA Citrix login
+
+If ImageFound(imageName:"CitrixIcon_Large", waitFor:60, SearchRectangle:HandlerGarage.ScreenPart("BottomRightQuadrant")) then PauseScript
+
+WaitFor 60, "Hyperspace_SunAndMoon_Icon"
+
+set global HyperspaceLaunched = true
+
+on AddressCitrixLogin
+	If ImageFound(text:"Secure connection", waitFor:10,SearchRectangle:HandlerGarage.ScreenPart("Lynde")) then
+		TypeEncodedText "?Lks-w=6[$|h{WtMh$!"
+		TypeText Return
+		PauseScript
+	End If 
+end AddressCitrixLogin
+

@@ -1,0 +1,64 @@
+﻿global myCurrentPatient
+
+if global myCurrentPatient.InsurancePlan is empty then
+	TypeText optionKey,"l"
+	Exit Handler
+end if 
+
+Click text:"Add Coverage", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("BottomRightQuadrant")
+
+Wait 5
+
+WaitFor 10, text:"Add a New or Existing Coverage", SearchRectangle:HandlerGarage.ScreenPart("TopLeftQuadrant")
+
+Set myCoveragePopup to HandlerGarage.ScreenPart("CurrentPopup")
+
+WaitFor 5, text:"Search by payer", SearchRectangle:myCoveragePopup
+
+TypeText global myCurrentPatient.InsurancePlan,Return
+
+WaitFor 5, text: global myCurrentPatient.InsurancePlanName, SearchRectangle:myCoveragePopup
+
+TypeText optionKey,"a"
+
+If ImageFound (text:"Blue Cross Cheat Sheet", WaitFor:2) then
+	Click foundimagelocation()
+	TypeText optionKey,F4
+	WaitFor 5, text:"Additional Browser Opened", SearchRectangle:HandlerGarage.ScreenPart("Center")
+	TypeText optionKey,"n"
+End if
+
+WaitFor 10, text:"Add a New or Existing Coverage", SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+TypeText Return
+
+WaitFor 10, text:"Member ID", SearchRectangle:HandlerGarage.ScreenPart("Center")
+
+TypeText global myCurrentPatient.InsuranceID,tab, tab
+TypeText global myCurrentPatient.InsuranceGroupNumber,tab
+TypeText optionKey,"o"
+
+Wait 5
+
+WaitFor 10, text:"Pull Info", SearchRectangle:HandlerGarage.ScreenPart("BottomRightQuadrant")
+
+(*Try
+	Click text:"Subscriber ID", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), HotSpot:(10,25)
+Catch theException
+	Click text:"Recipient Number", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), HotSpot:(10,25)
+End try*)
+
+Click text:global myCurrentPatient.InsuranceID_Type, waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), HotSpot:(10,25)
+TypeText global myCurrentPatient.InsuranceID,tab
+
+Click text:"Policy", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+
+If ImageFound(text:"Coverage-Level Effective Dates", waitFor:5, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")) then TypeText "mb", tab, tab
+
+WaitFor 10, text:"Group Number", SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+TypeText global myCurrentPatient.InsuranceGroupNumber,tab,tab
+TypeText "8885551212",tab
+TypeText "8885551212",tab
+
+TypeText optionKey,"l"
+WaitFor 15.0, "Registration_PersonalFamilyGuarantorIcon"
+TypeText optionKey,"l"

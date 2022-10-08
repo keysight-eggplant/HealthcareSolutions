@@ -1,0 +1,5 @@
+<<<<<<< HEAD
+﻿{CaptureDate = "2022-05-20 11:52:29 -0400"; CaptureHost = "My Super Cool SUT"; CaptureScreenSize = (1920, 1080); HasAlpha = 1; HotSpotX = 4; HotSpotY = 4; LastKnownLocationX = 0; LastKnownLocationY = 0; OriginalLocationX = 1734; OriginalLocationY = 970; Precise = 0; Pulsing = 0; Scale = 1; SearchObjectName = CitrixIcon; tags = (); }
+=======
+﻿{CaptureDate = "2022-05-20 11:52:29 -0400"; CaptureHost = "My Super Cool SUT"; CaptureScreenSize = (1920, 1080); HasAlpha = 1; HotSpotX = 4; HotSpotY = 4; LastKnownLocationX = 0; LastKnownLocationY = 0; OriginalLocationX = 1734; OriginalLocationY = 970; Precise = 0; Pulsing = 0; Scale = 1; tags = (); }
+>>>>>>> fe386a4 (Updates for OpenCitrix and Login scripts)

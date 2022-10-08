@@ -1,0 +1,47 @@
+﻿params EpicUserID, EpicPassword, Job, DepartmentID, EpicUsername, DepartmentName
+
+if global LoggedIn = true then Run "CheckTitlebar" EpicUsername, DepartmentName
+
+if global LoggedIn = true then Exit handler
+
+WaitFor 60, "Hyperspace_SunAndMoon_Icon"
+
+WaitFor 5, text:"User ID",SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+Click FoundImageLocation()
+
+
+TypeText EpicUserID,tab
+TypeText EpicPassword,tab
+TypeText Return
+
+If ImageFound(text:"Job", waitFor:2,SearchRectangle:HandlerGarage.ScreenPart("Lynde")) then
+	
+	TypeText Job,tab
+	TypeText optionKey,"o"
+	
+End If
+
+If ImageFound(text:"Department", waitFor:2,SearchRectangle:HandlerGarage.ScreenPart("Lynde")) then
+	
+	TypeText DepartmentID,tab
+	TypeText optionKey,"o"
+	
+End If
+
+If ImageFound(text:"Message", waitFor:2,SearchRectangle:HandlerGarage.ScreenPart("Lynde")) then
+	
+	TypeText optionKey,"o"
+	
+End If
+
+
+
+
+
+
+
+
+
+
+
+

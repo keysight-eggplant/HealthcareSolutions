@@ -1,0 +1,9 @@
+﻿params patientnumber,datafilename
+
+set global recordcountcounter = patientnumber //Patient that is needed should be changed here
+
+set global myConnectionString to {type:"excel", file:ResourcePath(datafilename), writable: Yes} -- set the specified variable, myConnectionString, to store the contents of the referenced Excel file
+
+set global myCurrentPatient to the record of global myConnectionString where RecNumber is global RecordCountCounter -- assumes a column in the Excel spreadsheet called 'RecNumber' 
+
+PauseScript

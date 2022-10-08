@@ -1,0 +1,41 @@
+﻿WaitFor 10, image:"HyperspaceWrench",SearchRectangle:HandlerGarage.ScreenPart("NavigatorList")
+Click text:"Demographics", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("NavigatorList")
+Wait 1
+WaitFor 10, text:"County",SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+
+TypeText global myCurrentPatient.Address, tab
+TypeText global myCurrentPatient.ZipCode, tab
+Wait 1
+If ImageFound(text:"Address Matches", waitFor:5,SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")) then typeText optionKey,"a"
+
+WaitFor 10, text:"<Number>", validCharacters:"*", SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")
+Click FoundImageLocation()
+TypeText global myCurrentPatient.HomePhone, tab
+Click ImageLocation(text:"Work Phone", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")) + (150,0)
+TypeText global myCurrentPatient.MobilePhone, tab
+Click ImageLocation(text:"Mobile", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")) + (155,0)
+TypeText global myCurrentPatient.MobilePhone, tab
+Click ImageLocation(text:"Email", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")) + (0,25)
+TypeText global myCurrentPatient.Email, tab
+WaitFor 1, text:global myCurrentPatient.Email, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")
+
+//Add Patient Contacts
+TypeText optionKey, shiftKey, "t"
+WaitFor 10, text:"Inactive Contacts", SearchRectangle:HandlerGarage.ScreenPart("TopRightQuadrant")
+TypeText Return
+WaitFor 10, text:"Add Contact", SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+TypeText global myCurrentPatient.EmergencyContactName, tab
+TypeText global myCurrentPatient.EmergencyContactRelationship, tab
+TypeText global myCurrentPatient.HomePhone, tab
+Click text:"Home", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+If global myCurrentPatient.GuarantorRelationship <> "Self" then
+	set myLegalGuardianResponseArea to ImageRectangle(text:"Legal Guardian", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("Lynde")) + (100,-2, 300, 2)
+	Click text:"Yes", waitFor:1, SearchRectangle: myLegalGuardianResponseArea
+End If
+TypeText optionKey, "a"
+WaitFor 10, text: global myCurrentPatient.EmergencyContactName, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), IgnoreSpaces: yes
+TypeText controlKey,"q"
+WaitFor 10, text: "County", SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+
+
+TypeText F8

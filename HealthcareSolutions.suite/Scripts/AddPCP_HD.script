@@ -1,0 +1,23 @@
+﻿Log me.name && "is starting"
+
+MoveTo (800,400)
+
+Wait 2
+
+WaitFor 10, text:"Search current and past team members",SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")
+
+Click text:"Add PCP", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("TopLeftQuadrant"), Hotspot:(200,5)
+TypeText global myCurrentPatient.PCP, tab
+Wait 2
+WaitFor 10, text:global myCurrentPatient.PCP, SearchRectangle:HandlerGarage.ScreenPart("Center")
+TypeText spacebar
+TypeText Return
+Wait 2
+WaitFor 10, text:"Receive Notifications", SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+Click text:"Start", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("CurrentPopup"), Hotspot:(2,20)
+TypeText "mb",tab
+TypeText optionKey,"a"
+Wait 2
+
+
+

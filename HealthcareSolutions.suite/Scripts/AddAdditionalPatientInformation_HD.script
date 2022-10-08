@@ -1,0 +1,27 @@
+﻿Wait 1
+WaitFor 10,  text:"Additional Patient Information", SearchRectangle: HandlerGarage.ScreenPart("TopLeftQuadrant")
+WaitFor 10, text:"Veteran Status", SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+
+Click ImageLocation(text:"Resident of State", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")) + (0,25)
+TypeText global myCurrentPatient.ResidentOfState, tab
+TypeText global myCurrentPatient.MaritalStatus, tab
+TypeText global myCurrentPatient.Religion, tab
+TypeText global myCurrentPatient.Language, tab
+TypeText global myCurrentPatient.Ethnicity, tab
+TypeText global myCurrentPatient.Race, tab
+
+Click ImageLocation(text:"Blind", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")) + (0,25)
+TypeText "n", tab -- Blind
+TypeText "n", tab -- Deaf
+TypeText "n", tab -- Visually impaired
+TypeText "n", tab -- Hearing impaired
+TypeText "n", tab -- Interpreter needed
+
+Click ImageLocation(text:"Student Status", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")) + (0,25)
+TypeText "3", tab -- Not a student
+
+Click ImageLocation(text:"Veteran Status", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")) + (0,25)
+TypeText global myCurrentPatient.VeteranStatus, tab
+TypeText global myCurrentPatient.MilitaryBranch, tab
+Wait 1
+TypeText F8

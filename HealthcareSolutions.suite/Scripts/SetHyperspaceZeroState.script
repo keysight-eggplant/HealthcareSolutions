@@ -1,0 +1,3 @@
+﻿Wait until ImageFound(text:"More", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("HyperspaceToolbar")) or ImageFound(text:"Log Out", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("HyperspaceToolbar"))
+
+If ImageFound(image:"HighContrastColorSwatch")  is false then HandlerGarage.OpenEpicMenuItem "High Contrast"

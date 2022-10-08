@@ -1,0 +1,817 @@
+﻿---------------------------------------------------------------------------------
+
+//code for function to return a value for a searchrectangle based on the position of an image
+//use the x and y offset values to move the search area to the right of or below the anchor image
+//the x and y distances define the width and height of the search area
+function ReturnSearchRectangle image, x_distance, y_distance, x_offset, y_offset
+
+	put ImageRectangle(Image:image, WaitFor:5) into ImageRectangle
+	set StartLeftSearch = left(ImageRectangle) + x_offset
+	set StartTopSearch = top(ImageRectangle) + y_offset
+	set EndRightSearch = StartLeftSearch + x_distance
+	
+	log "The StartLeftSearch is"&&StartLeftSearch
+	log "The x distance is"&&x_distance
+	log "The endrightsearch is"&&EndRightSearch
+	
+	set EndBottomSearch = StartTopSearch + y_distance
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	set thevalue to (UL_Search,BR_Search)
+	
+	log "The search reactangle is"&&thevalue
+	return thevalue
+	
+end ReturnSearchRectangle
+
+---------------------------------------------------------------------------------
+
+//code for function to return a value for a searchrectangle based on the position of an image
+//use the x and y offset values to move the search area to the right of or below the anchor text
+//the x and y distances define the width and height of the search area
+//compared to the function ReturnSearchRectangle this handler takes two additional parameters
+//the mySearchRectangle parameter determines where to look for the anchor text
+//the validWordsYN parameter determines whether the validWords:"*" parameter shall be used by the function
+function ReturnSearchRectangleBasedOnText text, x_distance, y_distance, x_offset, y_offset, mySearchRectangle, validWordsYN
+
+	If validWordsYN = Yes then
+		put ImageRectangle(text:text, WaitFor:5,searchRectangle:mySearchRectangle,validWords:"*") into myImageRectangle
+	Else
+		put ImageRectangle(text:text, WaitFor:5,searchRectangle:mySearchRectangle) into myImageRectangle		
+	End If
+	
+	set StartLeftSearch = left(myImageRectangle) + x_offset
+	set StartTopSearch = top(myImageRectangle) + y_offset
+	set EndRightSearch = StartLeftSearch + x_distance
+	set EndBottomSearch = StartTopSearch + y_distance
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	set thevalue to (UL_Search,BR_Search)
+	
+	log "The search rectangle is"&&thevalue
+	return thevalue
+	
+end ReturnSearchRectangleBasedOnText
+
+---------------------------------------------------------------------------------
+
+//function to read text at a location defined by the same line as the line text occurring beneath a column image
+//mySearchRectangle is an optional parameter to assist to find the line text
+//myReadTextPattern is an optional parameter that defines the validPattern for the OCR
+function ReadTextOnSameLine LineText, image1, rowheight, myCaseSensitive, mySearchRectangle, myReadTextPattern
+
+	put the readTextSettings into tmpRTS
+	log "The current settings for ReadTextSettings are"&&tmpRTS
+	if rowheight = "" then set rowheight = 2
+	if myCaseSensitive = "" then set myCaseSensitive to "no"
+	
+	if mySearchRectangle = "" then
+		put ImageRectangle(Text:LineText,WaitFor:5,caseSensitive:myCaseSensitive,ignoreSpaces:Yes) into ImageRectangle1
+	Else
+		put ImageRectangle(Text:LineText,WaitFor:5,caseSensitive:myCaseSensitive, SearchRectangle:mySearchRectangle,ignoreSpaces:Yes) into ImageRectangle1
+	end if
+	
+	put ImageRectangle(Image:image1,WaitFor:5) into ImageRectangle2
+	set StartLeftSearch = left(ImageRectangle2)
+	set StartTopSearch = top(ImageRectangle1) - 2
+	set EndRightSearch = right(ImageRectangle2)
+	set EndBottomSearch = bottom(ImageRectangle1) + rowheight
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	if myReadTextPattern <> "" then set the readTextSettings to {validPattern:myReadTextPattern}
+	set thevalue to ReadText(UL_Search,BR_Search)
+	
+	log "The read text is"&&thevalue
+	return thevalue
+	
+	Log "The current ReadTextSettings are"&&the ReadTextSettings
+	set the readTextSettings to tmpRTS
+	Log "The restored ReadTextSettings are"&&the ReadTextSettings
+	
+end ReadTextOnSameLine
+
+---------------------------------------------------------------------------------
+
+//function to read text at a location below a given image based on the height of the row beneath the image and bounded by a column width
+function ReadTextFromBelowImageLocation image1, rowheight, columnwidth,contrastYN
+
+	if rowheight = "" then
+		set rowheight = 2
+	end if
+	
+	put ImageRectangle(Image:image1,WaitFor:5) into ImageRectangle1
+	set StartLeftSearch = left(ImageRectangle1)
+	set StartTopSearch = bottom(ImageRectangle1) +2
+	set EndRightSearch = right(ImageRectangle1) + columnwidth
+	set EndBottomSearch = bottom(ImageRectangle1) + rowheight
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	
+	If contrastYN = No then
+		Log ReadText(UL_Search,BR_Search)
+		set thevalue to trimAll(ReadText(UL_Search,BR_Search))
+	Else
+		set thevalue to trimAll(ReadText(UL_Search,BR_Search),contrast:on)
+	End If
+	
+	log "The read text is"&&thevalue
+	return thevalue
+	
+end ReadTextFromBelowImageLocation
+
+---------------------------------------------------------------------------------
+
+//function to read text at a location defined by the same line as the first image occurring beneath the second image
+function ReadTextOnSameLineAsImage image1, image2
+
+	put ImageRectangle(Image:image1,WaitFor:5) into ImageRectangle1
+	put ImageRectangle(Image:image2,WaitFor:5) into ImageRectangle2
+	set StartLeftSearch = left(ImageRectangle2)
+	set StartTopSearch = top(ImageRectangle1)
+	set EndRightSearch = right(ImageRectangle2)
+	set EndBottomSearch = bottom(ImageRectangle1) + 2
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	set thevalue to ReadText(UL_Search,BR_Search)
+	
+	log "The read text is"&&thevalue
+	return thevalue
+	
+end ReadTextOnSameLineAsImage
+
+---------------------------------------------------------------------------------
+
+//Clicks at the intersection of two points
+//Helpful for selecting checkboxes arranged in rows and columns
+on ClickAtIntersectionOfPoints rowPoint, columnPoint
+
+	set tmpIntersectionPoint to (item 1 of columnPoint,item 2 of rowPoint)
+	log "The point of intersection is"&&tmpIntersectionPoint
+	click tmpIntersectionPoint
+	
+end ClickAtIntersectionOfPoints
+
+---------------------------------------------------------------------------------
+
+//code to click text at a location defined by the same line as the first image/text occurring beneath the second image/text
+on ClickTextAtIntersection myRowItemType,myRowItem,myColumnItemType,myColumnItem,mySearchRectangle
+
+	If MyRowItemType = "text" then
+		put ImageRectangle(text:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle1
+	Else
+		put ImageRectangle(image:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle1
+	End If
+	
+	If MyColumnItemType = "text" then
+		put ImageRectangle(text:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle2
+	Else
+		put ImageRectangle(image:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle2
+	End If
+	
+	set StartLeftSearch = left(ImageRectangle2)
+	set StartTopSearch = top(ImageRectangle1)
+	set EndRightSearch = right(ImageRectangle2)
+	set EndBottomSearch = bottom(ImageRectangle1) + 2
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	set thevalue to ReadText(UL_Search,BR_Search)
+	set the searchRectangle to(UL_Search,BR_Search)
+	click (text:thevalue)
+	set the searchRectangle to ()
+	
+	log "The text at this position is"&&thevalue
+	
+end ClickTextAtIntersection
+
+---------------------------------------------------------------------------------
+
+//Executes on the local machine or agent and NOT the SUT
+//Works with any letter drive path that is available to the local machine or agent
+//Available actions are: Copy, Move, Delete, and Rename
+on ProcessMyFilePS myAction, myOriginalFileName, myOriginalFolder, myDestinationFolder, myNewFileName
+
+	If myAction = "Rename" AND myNewFileName = "" then
+		LogError "The file cannot be renamed without a value for myNewFileName"
+		Exit Handler
+	End If
+	
+	If myAction = "Move" AND myDestinationFolder = "" then
+		LogError "The file cannot be moved without a value for myDestinationFolder"
+		Exit Handler
+	End If
+	
+	If myAction = "Copy" AND myDestinationFolder = "" then
+		LogError "The file cannot be copied without a value for myDestinationFolder"
+		Exit Handler
+	End If
+	
+	Log "Preparing to"&&myAction&&"file:"&&myOriginalFileName&&"from"&&myOriginalFolder&&"to"&&myDestinationFolder
+	
+	//Creates an audit file named for the action being performed
+	//Text file will initially be populated with a generic message
+	//Shell command called below will overwrite the text based on success or error
+	Set myAuditFile to myAction&".txt"
+	Log "Errors (if any) will be logged in"&&myAuditFile
+	Put "This is a generic message." into file ResourcePath(myAuditFile)
+	
+	
+	//Allows for differences in syntax between Delete, Rename, or Copy and Move
+	If myAction = ...
+		... "Delete" :
+			put "del"&&Quote&myOriginalFolder&backslash&myOriginalFileName&Quote into command
+			
+		... "Rename" :
+			put "ren"&&Quote&myOriginalFolder&backslash&myOriginalFileName&Quote&&Quote&myNewFileName&Quote into command
+			
+		... Else
+			put myAction&&Quote&myOriginalFolder&backslash&myOriginalFileName&Quote&&Quote&myDestinationFolder&backslash&myNewFileName&Quote into command
+			
+	End if
+	
+	put "2>&1" into myOutputCommand -- the 2>&1 sends both the STDOUT and STDERR to the output file
+	put command  &" > " & quote &ResourcePath(myAuditFile)&quote && myOutputCommand into CommandExecute 
+	log "The shell command is"&&CommandExecute
+	
+	shell "c:\windows\system32\cmd.exe", << /c ">>& CommandExecute &<<">>
+	Wait 1
+	
+	//Error checking begins
+	Set myAuditMessage to file ResourcePath(myAuditFile)
+	If myAuditMessage contains ...
+		... "generic" : -- means that no output was recorded from the shell commnd
+			LogError "The" && myAction && "was NOT performed successfully."
+			Log "The audit message was" && myAuditMessage
+			
+		... "denied" : -- indicates that the process failed because of file/folder permissions
+			LogWarning "The" && myAction && "was not performed successfully."
+			LogWarning "The error message was" && myAuditMessage
+			
+		... "copied" : -- output indicated that the file was copied
+			Log "The file was successfully copied."
+			
+		... "moved" : -- output indicated that the file was moved
+			Log "The file was successfully moved."
+			
+		... "cannot" : -- output indicates that the process failed, typically based on syntax
+			LogWarning "The" && myAction && "was not performed successfully."
+			LogWarning "The error message was" && myAuditMessage
+			
+		... "could not" : -- output indicates that the process failed, typically based on an inability to locate the file
+			LogWarning "The" && myAction && "was not performed successfully."
+			LogWarning "The error message was" && myAuditMessage
+			
+		... Else -- because rename and delete do not generate success messages, it is difficult to confirm those processes succeeded
+			Log "The" && myAction && "was likely successful. Its audit message is" && myAuditMessage
+	End if
+	
+	//Removes previous audit file
+	delete file ResourcePath(myAuditFile)
+	
+end ProcessMyFilePS
+
+---------------------------------------------------------------------------------
+
+//Scrolls down a page to locate an image
+//Uses an optional parameter of myMoveToPoint to place cursor within scrollable area
+on ScrollToFindImage ImageName,myMoveToPoint
+
+	set tmpRWI to the remoteWorkInterval
+	log "My current RemoteWorkInterval is"&&tmpRWI
+	setoption remoteWorkInterval, .1 -- allows for faster scrolling
+	
+	If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30)
+	
+	If myMoveToPoint <> "" then MoveTo myMoveToPoint	
+	
+	Repeat until ImageFound(Image:ImageName, WaitFor:1)
+		ScrollWheelDown 2
+	End repeat
+	
+	ScrollWheelDown 1 -- accounts for images that may be partially obscured by the bottom of the page
+	Wait 1 -- allows for the GUI to stabilize prior to attemtping to calculate the final location of the image
+	
+	If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30) -- makes certain that the cursor is not hovering over the image to be located which might cause the image to change color
+	
+	Try
+		MoveTo image:ImageName
+	Catch theException
+		MoveTo FoundImageLocation() - (-30,75) -- accounts for rare instances in which the image is still displayed in a hover state
+		MoveTo image:ImageName
+	End try
+	
+	setoption remoteWorkInterval, tmpRWI -- resets the RemoteWorkInterval back to its prior value
+	
+end ScrollToFindImage
+
+---------------------------------------------------------------------------------
+
+//Scrolls up a page to locate an image
+//Uses an optional parameter of myMoveToPoint to place cursor within scrollable area
+on ScrollUpToFindImage ImageName,myMoveToPoint
+
+	set tmpRWI to the remoteWorkInterval
+	log "My current RemoteWorkInterval is"&&tmpRWI
+	setoption remoteWorkInterval, .1  -- allows for faster scrolling
+	
+	If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30)
+	
+	If myMoveToPoint <> "" then MoveTo myMoveToPoint
+	
+	Repeat until ImageFound(Image:ImageName, WaitFor:1)
+		ScrollWheelUp 1
+	End repeat
+	
+	Wait 1  -- allows for the GUI to stabilize prior to attemtping to calculate the final location of the image
+	
+	If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30) -- makes certain that the cursor is not hovering over the image to be located which might cause the image to change color
+	
+	Try
+		MoveTo image:ImageName
+	Catch theException
+		MoveTo FoundImageLocation() - (-30,75) -- accounts for rare instances in which the image is still displayed in a hover state
+		MoveTo image:ImageName
+	End try
+	
+	setoption remoteWorkInterval, tmpRWI -- resets the RemoteWorkInterval back to its prior value
+	
+end ScrollUpToFindImage
+
+---------------------------------------------------------------------------------
+
+//Scrolls down a page to locate text
+//Uses the mySearchRectangle parameter to restrict search area for text
+//Uses an optional parameter of myMoveToPoint to place cursor within scrollable area
+//Uses a parameter of myValidCharactersYN to assist if text cannot be located
+on ScrollToFindText myText,mySearchRectangle,myMoveToPoint,myValidCharactersYN
+
+	if mySearchRectangle = "" then set mySearchRectangle to RemoteScreenRectangle()
+	
+	log "The SearchRectangle is"&&mySearchRectangle
+	set tmpRWI to the remoteWorkInterval
+	log "My current RemoteWorkInterval is"&&tmpRWI
+	setoption remoteWorkInterval, .1  -- allows for faster scrolling
+	
+	If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30)
+	
+	If myMoveToPoint <> "" then MoveTo myMoveToPoint
+	
+	If myValidCharactersYN = "N" then
+		
+		Repeat until ImageFound(text:myText, WaitFor:2,SearchRectangle:mySearchRectangle,ignoreSpaces:Yes)
+			ScrollWheelDown 2
+		End repeat
+		
+		ScrollWheelDown 1 -- accounts for images that may be partially obscured by the bottom of the page
+		Wait 1 -- allows for the GUI to stabilize prior to attemtping to calculate the final location of the image
+		
+		If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30) -- makes certain that the cursor is not hovering over the image to be located which might cause the image to change color
+		
+		Try
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,ignoreSpaces:Yes
+		Catch theException
+			ScrollWheelUp 1
+			MoveTo FoundImageLocation() - (-30,75) -- accounts for rare instances in which the image is still displayed in a hover state
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,ignoreSpaces:Yes
+		End try
+		
+	Else
+		
+		Repeat until ImageFound(text:myText, WaitFor:2,SearchRectangle:mySearchRectangle, validCharacters:"*",ignoreSpaces:Yes,validWords:"*")
+			ScrollWheelDown 2
+		End repeat
+		
+		ScrollWheelDown 1 -- accounts for images that may be partially obscured by the bottom of the page
+		Wait 1 -- allows for the GUI to stabilize prior to attemtping to calculate the final location of the image
+		
+		If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30) -- makes certain that the cursor is not hovering over the image to be located which might cause the image to change color
+		
+		Try
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,validCharacters:"*",ignoreSpaces:Yes,validWords:"*"
+		Catch theException
+			ScrollWheelUp 1
+			MoveTo FoundImageLocation() - (-30,75)  -- accounts for rare instances in which the image is still displayed in a hover state
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,validCharacters:"*",ignoreSpaces:Yes,validWords:"*"
+		End try
+		
+	End If
+	
+	setoption remoteWorkInterval, tmpRWI
+	
+end ScrollToFindText
+
+---------------------------------------------------------------------------------
+
+//Scrolls up a page to locate text
+//Uses the mySearchRectangle parameter to restrict search area for text
+//Uses an optional parameter of myMoveToPoint to place cursor within scrollable area
+//Uses a parameter of myValidCharactersYN to assist if text cannot be located
+on ScrollUpToFindText myText,mySearchRectangle,myMoveToPoint,myValidCharactersYN
+
+	if mySearchRectangle = "" then set mySearchRectangle to RemoteScreenRectangle()
+	
+	log "The SearchRectangle is"&&mySearchRectangle
+	set tmpRWI to the remoteWorkInterval
+	log "My current RemoteWorkInterval is"&&tmpRWI
+	setoption remoteWorkInterval, .1  -- allows for faster scrolling
+	
+	If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30)
+	
+	If myMoveToPoint = "" then set myMoveToPoint to the center of mySearchRectangle
+	
+	MoveTo myMoveToPoint
+	
+	If myValidCharactersYN = "N" then
+		
+		Repeat until ImageFound(text:myText, WaitFor:2,SearchRectangle:mySearchRectangle,ignoreSpaces:Yes)
+			ScrollWheelUp 1
+		End repeat
+		
+		Wait 1 -- allows for the GUI to stabilize prior to attemtping to calculate the final location of the image
+		
+		If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30) -- makes certain that the cursor is not hovering over the image to be located which might cause the image to change color
+		
+		Try
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,ignoreSpaces:Yes
+		Catch theException
+			ScrollWheelUp 1
+			MoveTo FoundImageLocation() - (-30,75) -- accounts for rare instances in which the image is still displayed in a hover state
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,ignoreSpaces:Yes
+		End try
+		
+	Else
+		
+		Repeat until ImageFound(text:myText, WaitFor:2,SearchRectangle:mySearchRectangle, validCharacters:"*",ignoreSpaces:Yes,validWords:"*")
+			ScrollWheelUp 2
+		End repeat
+		
+		Wait 1 -- allows for the GUI to stabilize prior to attemtping to calculate the final location of the image
+		
+		If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30) -- makes certain that the cursor is not hovering over the image to be located which might cause the image to change color
+		
+		Try
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,validCharacters:"*",ignoreSpaces:Yes,validWords:"*"
+		Catch theException
+			ScrollWheelUp 1
+			MoveTo FoundImageLocation() - (-30,75)  -- accounts for rare instances in which the image is still displayed in a hover state
+			MoveTo text:myText,SearchRectangle:mySearchRectangle,validCharacters:"*",ignoreSpaces:Yes,validWords:"*"
+		End try
+		
+	End If
+	
+	setoption remoteWorkInterval, tmpRWI
+	
+end ScrollUpToFindText
+
+---------------------------------------------------------------------------------
+
+//This function searches at the intersection of a row and a column for either text or an image
+//If the text or image is located at the intersection, the function returns TRUE. If not, it returns FALSE
+//This function calls the function CalculateSearchAreaForIntersectionOfRowAndColumn
+//This function has optional parameters myRowSearchArea and myColumnSearchArea to narrow search area for those items
+
+function SearchAtIntersectionOfRowAndColumn myWaitTime, myTargetImageOrText, myTargetValue, myRowImageOrText, myRowValue, myRowSearchArea, myColumnImageOrText, myColumnValue, myColumnSearchArea
+	If myRowSearchArea = "" then set myRowSearchArea to the SearchRectangle
+	If myColumnSearchArea = "" then set myColumnSearchArea to the SearchRectangle
+	
+	If ...
+		... myTargetImageOrText = "Text" and myRowImageOrText = "Text" and myColumnImageOrText ="Text" then
+			set myRowRectangle to ImageRectangle(text:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(text:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(text:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		... myTargetImageOrText = "Image" and myRowImageOrText = "Text" and myColumnImageOrText ="Text" then
+			set myRowRectangle to ImageRectangle(text:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(text:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(imageName:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		... myTargetImageOrText = "Text" and myRowImageOrText = "Image" and myColumnImageOrText ="Text" then
+			set myRowRectangle to ImageRectangle(imageName:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(text:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(text:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		... myTargetImageOrText = "Image" and myRowImageOrText = "Image" and myColumnImageOrText ="Text" then		
+			set myRowRectangle to ImageRectangle(imageName:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(text:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(imageName:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		... myTargetImageOrText = "Text" and myRowImageOrText = "Text" and myColumnImageOrText ="Image" then
+			set myRowRectangle to ImageRectangle(text:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(imageName:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(text:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		... myTargetImageOrText = "Image" and myRowImageOrText = "Text" and myColumnImageOrText ="Image" then
+			set myRowRectangle to ImageRectangle(text:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(imageName:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(imageName:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		... myTargetImageOrText = "Text" and myRowImageOrText = "Image" and myColumnImageOrText ="Image" then			
+			set myRowRectangle to ImageRectangle(imageName:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(imageName:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(text:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		... myTargetImageOrText = "Image" and myRowImageOrText = "Image" and myColumnImageOrText ="Image" then
+			set myRowRectangle to ImageRectangle(imageName:myRowValue, SearchRectangle:myRowSearchArea)
+			set myColumnRectangle to ImageRectangle(imageName:myColumnValue, SearchRectangle:myColumnSearchArea)
+			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
+			If ImageFound(imageName:myTargetValue, waitFor:myWaitTime, SearchRectangle:myTargetSearchArea) then
+				Return TRUE
+			Else
+				Return FALSE
+			End If
+			Exit Handler
+			
+		Else
+			Return FALSE
+	End If
+	
+end SearchAtIntersectionOfRowAndColumn
+
+---------------------------------------------------------------------------------
+
+function CalculateSearchAreaForIntersectionOfRowAndColumn myRowRectangle, myColumnRectangle
+
+	set tmpSearchArea_L = left(myColumnRectangle) - .5 * width(myColumnRectangle)
+	set tmpSearchArea_T = top(myRowRectangle) - .5 * height(myRowRectangle)
+	set tmpSearchArea_R = right(myColumnRectangle) + .5 * width(myColumnRectangle)
+	set tmpSearchArea_B = bottom(myRowRectangle) + .5 * height(myRowRectangle)
+	set tmpSearchArea to (tmpSearchArea_L,tmpSearchArea_T,tmpSearchArea_R,tmpSearchArea_B)
+	Log "The search area is"&&tmpSearchArea
+	Return tmpSearchArea
+	
+end CalculateSearchAreaForIntersectionOfRowAndColumn
+
+//function to divide the screen into parts to reduce search times
+function ScreenPart Portion
+
+	// Set up an easy-to-maintain property list that stores the necessary multipliers for the specified screen portion parameter value
+	set tmpRWI to the remoteWorkInterval
+	log "The default remote work interval is"&&tmpRWI
+	setoption remoteWorkInterval, .01
+	log "The current remote work interval is"&&(the remoteworkinterval)
+	
+	// The CurrentPopup screen part was developed specifically for Epic Hyperspace
+	// It traces a precise rectangle around a popup window using trangulation of three points (upper left corner, upper right corner, and bottom right corner)
+	// If you want to use this screen part for other UIs, follow these steps:
+	// 1. Create a screen part below called CurrentPopupUL using coordinates where the upper left corner of a popup would typically be located ex: CurrentPopupUL: ((.12,.026),(.35,.35))
+	// 2. Capture images for the upper left, upper right, and bottom right corners of your popup. The height of the UR image must be the same as UL and the width of BR needs to be less than or equal to that of UR
+	// 3. Substitute the names of your UL, UR, and BR images for HyperspacePopupBox_UL, etc. below
+	if Portion = "CurrentPopup" then
+		
+		set tempSearchAreaUL to HandlerGarage.ScreenPart("CurrentPopupUL")
+		
+		If ImageFound(imageName:"HyperspacePopupBox_UL", waitFor:10,SearchRectangle:tempSearchAreaUL) is false then
+			
+			LogWarning "No popup can be located"
+			setoption remoteWorkInterval,tmpRWI
+			exit handler
+			
+		End If
+		
+		log "The previous UL was located @ " & tempPreviousUL -- addresses issues of popup windows opening over other popup windows. tempPreviousUL holds the value from the previous run
+		
+		if ImageRectangle(image:"HyperspacePopupBox_UL", SearchRectangle:tempSearchAreaUL) = tempPreviousUL then
+			
+			Log "Process is waiting for original window to finish closing."
+			Wait 1
+			
+		end if
+		
+		set tempPreviousUL to ImageRectangle(image:"HyperspacePopupBox_UL", SearchRectangle:tempSearchAreaUL) -- stores location of current UL corner of popup to be used for subsequent runs of this handler
+		log "The new UL corner is located @ " & tempPreviousUL
+		
+		set UL_Rectangle to ImageRectangle(image:"HyperspacePopupBox_UL",SearchRectangle:tempSearchAreaUL)
+		Log "The value for UL_Rectangle is"&&UL_Rectangle
+		
+		//Begins search for UR corner 15 pixels to the right of the UL
+		set HyperspacePopupBox_UR_SearchAreaX1 to right(UL_Rectangle)+15
+		log "The value for UR_X1 is " & HyperspacePopupBox_UR_SearchAreaX1\
+				
+		//Begins search for UR corner at the top of the UL
+		set HyperspacePopupBox_UR_SearchAreaY1 to top(UL_Rectangle)
+		log "The value for UR_Y1 is " & HyperspacePopupBox_UR_SearchAreaY1
+		
+		//Ends search for UR corner at the right margin of the screen
+		set HyperspacePopupBox_UR_SearchAreaX2 to width of the RemoteScreenRectangle
+		log "The value for UR_X2 is " & HyperspacePopupBox_UR_SearchAreaX2
+		
+		//Ends search for UR corner 5 pixels below the bottom of the UL
+		set HyperspacePopupBox_UR_SearchAreaY2 to bottom(UL_Rectangle)+5
+		log "The value for UR_Y2 is " & HyperspacePopupBox_UR_SearchAreaY2
+		
+		//Uses the 4 points calculated above to create a search rectangle to find to UR corner
+		set HyperspacePopupBox_UR_SearchArea  to ((HyperspacePopupBox_UR_SearchAreaX1,HyperspacePopupBox_UR_SearchAreaY1),(HyperspacePopupBox_UR_SearchAreaX2,HyperspacePopupBox_UR_SearchAreaY2))
+		log "The value for UR Search Area is " & HyperspacePopupBox_UR_SearchArea
+		
+		//Locates the UR corner using the search rectangle calculated above
+		set UR_Rectangle to ImageRectangle(image:"HyperspacePopupBox_UR",SearchRectangle:HyperspacePopupBox_UR_SearchArea)
+		Log "The value for UR_Rectangle is"&&UR_Rectangle
+		
+		//Begins search for the BR corner 2 pixels to the left of the UR
+		set HyperspacePopupBox_BR_SearchAreaX1 to left(UR_Rectangle) - 2
+		log "The value for BR_X1 is " &HyperspacePopupBox_BR_SearchAreaX1
+		
+		//Begins search for the BR corner 125 pixels below the UR
+		set HyperspacePopupBox_BR_SearchAreaY1 to top(UR_Rectangle)+125
+		log "The value for BR_Y1 is " & HyperspacePopupBox_BR_SearchAreaY1
+		
+		//Ends search for the BR corner 2 pixels to the right of the UR
+		set HyperspacePopupBox_BR_SearchAreaX2 to right(UR_Rectangle) + 2
+		log "The value for UR_X2 is " & HyperspacePopupBox_BR_SearchAreaX2
+		
+		//Ends search for the BR corner 800 pixels below the UR
+		set HyperspacePopupBox_BR_SearchAreaY2 to bottom(UR_Rectangle)+800
+		log "The value for UR_Y2 is " & HyperspacePopupBox_BR_SearchAreaY2
+		
+		//Uses the 4 points calculated above to create a search rectangle to find to BR corner
+		set HyperspacePopupBox_BR_SearchArea  to ((HyperspacePopupBox_BR_SearchAreaX1,HyperspacePopupBox_BR_SearchAreaY1),(HyperspacePopupBox_BR_SearchAreaX2,HyperspacePopupBox_BR_SearchAreaY2))
+		log "The value for BR Search Area is " & HyperspacePopupBox_BR_SearchArea
+		
+		//Locates the BR corner using the search rectangle calculated above
+		set BR_Rectangle to ImageRectangle(image:"HyperspacePopupBox_BR",searchrectangle:HyperspacePopupBox_BR_SearchArea)
+		Log "The value for BR_Rectangle is"&&BR_Rectangle
+		
+		//Calculates the 4 fractions necessary to create a screen part
+		//Values will be referenced by the screen part array CurrentPopup:((PopupUL_X,PopupUL_Y),(PopupBR_X,PopupBR_Y))
+		set PopupUL_X to (left(UL_Rectangle)/right(RemoteScreenRectangle()))
+		put PopupUL_X rounded to 3 places into PopupUL_X
+		log "The first value for the CurrentPopup screen part is"&&PopupUL_X
+		
+		set PopupUL_Y to (top(UL_Rectangle)/bottom(RemoteScreenRectangle()))
+		put PopupUL_Y rounded to 3 places into PopupUL_Y
+		log "The second value for the CurrentPopup screen part is"&&PopupUL_Y
+		
+		set PopupBR_X to (right(BR_Rectangle)/right(RemoteScreenRectangle()))
+		put PopupBR_X rounded to 3 places into PopupBR_X
+		log "The third value for the CurrentPopup screen part is"&&PopupBR_X
+		
+		set PopupBR_Y to (bottom(BR_Rectangle)/bottom(RemoteScreenRectangle()))
+		put PopupBR_Y rounded to 3 places into PopupBR_Y
+		log "The fourth value for the CurrentPopup screen part is"&&PopupBR_Y
+		
+	end if
+	
+	//The PreciseSidebar screen part is specific to Epic Hyperspace and does not have equivalents outside of that UI
+	//Remove the If statement below if using with non-Epic customers
+	if Portion = "PreciseSidebar" then
+		
+		If ImageFound(imageName:"HyperspaceSidebarExpand", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("RightHalf")) then click FoundImageLocation() -- allows for the possibility that the sidebar is currently collapsed
+		
+		WaitFor 10, "HyperspaceSidebarCollapse" -- waits until the sidebar is expanded
+		
+		//Calculates the 4 fractions necessary to create a screen part
+		//Values will be referenced by the screen part array PreciseSidebar:((SidebarUL_X,SidebarUL_Y),(SidebarBR_X,SidebarBR_Y))
+		
+		//Calculates X1 as being the right side of the sidebar collapse icon
+		set SidebarUL_X to (right(ImageRectangle("HyperspaceSidebarCollapse"))/right(RemoteScreenRectangle()))
+		put SidebarUL_X rounded to 2 places into SidebarUL_X
+		log "The first value for the PreciseSidebar screen part is"&&SidebarUL_X
+		
+		//Calculates Y1 based on the sidebar's typically beginning 420 pixels above the flyout on a 1920x1080 implementation
+		set SidebarUL_Y to (top(ImageRectangle(image:"HyperspaceSidebarCollapse"))-420)/bottom(RemoteScreenRectangle())
+		put SidebarUL_Y rounded to 2 places into SidebarUL_Y
+		log "The second value for the PreciseSidebar screen part is"&&SidebarUL_Y
+		
+		//Calculates X2 as being the right margin
+		set SidebarBR_X to 1
+		log "The third value for the PreciseSidebar screen part is"&&SidebarBR_X
+		
+		//Calculates Y2 as being the bottom of the screen
+		set SidebarBR_Y to 1
+		log "The fourth value for the PreciseSidebar screen part is"&&SidebarBR_Y
+		
+	end if
+	
+	
+	set screenPortions to {
+		TopHalf: ((0,0),(1,.5)),
+		BottomHalf: ((0,.5),(1,1)),
+		LeftHalf: ((0,0),(.5,1)),
+		RightHalf: ((.5,0),(1,1)),
+		HorizontalMiddle: ((0,.25),(1,.75)),
+		VerticalMiddle:((.25,0),(.75,1)),
+		TopLeftQuadrant:((0,0),(.5,.5)),
+		TopRightQuadrant:((.5,0),(1,.5)),
+		BottomLeftQuadrant:((0,.5),(.5,1)),
+		BottomRightQuadrant:((.5,.5),(1,1)),
+		Center:((.25,.25),(.75,.75)),
+		WindowsTitleBar:((0,0),(1,.025)),
+		WindowsTaskBar:((0,.95),(1,1)),
+		Lynde:((.3,.3),(.7,.7)),
+		BottomTenth:((0,.90),(1,1)),
+		Sidebar:((.8,0),(1,1)), -- Epic specific
+		HyperspaceToolbar:((0,.022),(1,.044)), -- Epic specific
+		HyperspaceHorizontalTabbar:((0,.056),(1,.086)), -- Epic specific
+		HyperspaceTabbar:((0,0),(.065,1)), -- Epic specific
+		HyperspacePatientHeader:((0,.082),(1,.180)), -- Epic specific
+		HyperspaceVerticalMiddle:((.35,0),(.65,1)), -- Epic specific
+		CurrentPopup:((PopupUL_X,PopupUL_Y),(PopupBR_X,PopupBR_Y)), -- Epic specific, but can be modified for other UIs
+		CurrentPopupUL: ((.12,.026),(.35,.35)),
+		PreciseSidebar:((SidebarUL_X,SidebarUL_Y),(SidebarBR_X,SidebarBR_Y)), -- Epic specific
+		CoveragePayorPlanSummaryBox:((.222,.192),(.663,.30)), -- Epic specific
+		ClinicalDocumentationArea:((.13,.145),(.81,.95)), -- Epic specific
+		MessageViewerSegmentArea: ((.077,.15),(.11,.55)), -- Epic specific
+		Storyboard: ((0,.09),(.14,.96)), -- Epic specific
+		ChartReviewLeftPanel: ((.13,.21),(.45,.91)), -- Epic specific
+		ChartReviewRightPanel: ((.45,.21),(.77,.91)), -- Epic specific
+		NavigatorList: ((.119,.146),(.23,.96)), -- Epic specific
+		TabbedNoteTypes:((.12,.18),(.80,.216)), -- Epic specific
+		HyperspaceReportButtons:((0,.095),(1,.158)), -- Epic specific
+		IFS:((.220,.192),(.833,.962)), -- Epic specific
+		LoginSearchArea:((.343,.356),(.658,.574)), -- Epic specific
+		TriageScreeningMenu:((.198,.179),(.984,.96)), -- Epic specific
+		TriageMenuList:((.118,.177),(.196,.509)), -- Epic specific
+		EDManagerWaiting:((.026,.765),(.161,.858)), -- Epic specific
+		GuarantorVerification:((.842,.212),(.995,.305)), -- Epic specific
+		VerificationsRemaining:((.844,.17),(.997,.95)), -- Epic specific
+		HyperspaceActivityButtons:((.120,.125),(.763,.184)), -- Epic specific
+		TrackBoardColumns:((0,.155),(1,.191)) -- Epic specific
+	}
+	
+	set multiplier to screenPortions.(Portion) // Retrieves the value for the key in the property list. The name of the key is passed as a parameter into the function.
+	
+	// Error handling is needed in the event that an unrecognized parameter is passed to the function
+	
+	if multiplier is empty then
+		throw "Parameter error", Portion && "is not a recognized screen portion."
+		setoption remoteWorkInterval, tmpRWI
+	end if
+	
+	setoption remoteWorkInterval, tmpRWI -- resets remote work interval back to its default value
+	
+	log "The current remote work interval is"&&(the remoteworkinterval)
+	
+	//Make certain that the return is the last line of the function
+	return (the remoteScreenSize,the remotescreenSize) * multiplier
+	
+End ScreenPart
+
+--------------------
+to handle OpenEpicMenuItem EpicMenuItem
+
+	if ImageFound("ChartSearchMagnifyingGlass") then
+		TypeText controlKey,spacebar
+		Wait 2
+		TypeText EpicMenuItem
+	else
+		TypeText controlKey,spacebar
+		Wait 2
+		Put ImageRectangle(text:"Search Activities", waitFor:10,SearchRectangle:HandlerGarage.ScreenPart("TopLeftQuadrant")) + [0,20,0,40] into ActivitySearchArea
+		TypeText EpicMenuItem
+		WaitFor 10, text:EpicMenuItem,SearchRectangle:ActivitySearchArea
+	end if
+	
+	
+	TypeText Return
+	
+	
+	try Wait until ImageFound(text:EpicMenuItem,SearchRectangle:ActivitySearchArea) is false
+	
+end OpenEpicMenuItem
+
+
+
+
+
+

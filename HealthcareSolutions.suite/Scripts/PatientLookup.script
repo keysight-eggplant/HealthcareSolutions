@@ -1,0 +1,31 @@
+﻿params ActionAfterLookup
+
+global myCurrentPatient
+
+If ActionAfterLookup = ...
+	... "create" :
+	-- HandlerGarage.OpenEpicMenuItem "Registration"
+		Wait 2
+		Set PatientLookupSearchArea to HandlerGarage.ScreenPart("CurrentPopup")
+		WaitFor 10, text:"Search for a Patient", SearchRectangle:PatientLookupSearchArea
+		WaitFor 10, text:"Name/MRN", SearchRectangle:PatientLookupSearchArea
+		TypeText global myCurrentPatient.PatientName, tabKey
+		TypeText optionKey,"f" -- shortcut key for Find Patient
+		If ImageFound(text:"exact match", waitFor:5, SearchRectangle:PatientLookupSearchArea) AND If ImageFound(text:global myCurrentPatient.FormattedDOB, waitFor:2, SearchRectangle:PatientLookupSearchArea) then
+			LogWarning "This patient already exists"
+			set global SkipPatient to True
+			TypeText optionKey,"c" -- shortcut key for Cancel
+			Exit Handler
+		End If
+		TypeText optionKey,"n" -- shortcut key for Create New Patient
+		
+	... "lookup" :
+		Set PatientLookupSearchArea to HandlerGarage.ScreenPart("CurrentPopup")
+		WaitFor 10, text:"Search for a Patient", SearchRectangle:PatientLookupSearchArea
+		TypeText global myCurrentPatient.PatientName, tabKey
+		TypeText optionKey,"f" -- shortcut key for Find Patient
+		
+	... Else
+		LogWarning "This action is not defined"
+		
+End if

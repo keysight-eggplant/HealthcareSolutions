@@ -1,0 +1,37 @@
+﻿global myCurrentPatient
+
+HandlerGarage.OpenEpicMenuItem "Registration"
+
+Run "PatientLookup" "create"
+
+if global SkipPatient then
+	set global SkipPatient to False
+	Exit Handler
+end if
+
+set myCurrentPatient.Scratch to "S"
+
+Wait 10
+
+Set PatientLookupSearchArea to HandlerGarage.ScreenPart("CurrentPopup")
+WaitFor 10, text:"Create a Patient", SearchRectangle:PatientLookupSearchArea
+Click text:"SSN", waitFor:1, SearchRectangle:PatientLookupSearchArea
+TypeText global myCurrentPatient.SSN, tab
+TypeText global myCurrentPatient.Gender, tab
+TypeText global myCurrentPatient.DOB, tab
+TypeText optionKey, "n"
+
+WaitFor 10, text:"All contacts loaded", SearchRectangle:PatientLookupSearchArea
+TypeText optionKey, "a"
+
+Wait 2
+WaitFor 10, image:"HyperspaceWrench", SearchRectangle:HandlerGarage.ScreenPart("BottomRightQuadrant")
+WaitFor 10, text:"PCP", SearchRectangle:HandlerGarage.ScreenPart("Sidebar")
+
+//Reads MRN value
+Wait 2
+DoubleClick text:"MRN", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("StoryBoard"), hotspot: (50,10)
+TypeText controlKey,"c"
+Put trimall(RemoteClipboard(5)) into global myCurrentPatient.MRN
+wait 1
+

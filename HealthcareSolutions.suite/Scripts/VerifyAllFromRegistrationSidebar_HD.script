@@ -1,0 +1,23 @@
+﻿Click text:"Registration", waitFor:10,SearchRectangle:HandlerGarage.ScreenPart("HyperspacePatientHeader")
+
+Try Click (Image:"Hyperspace_Checkbox_empty", WaitFor:1, SearchRectangle:HandlerGarage.ScreenPart("PreciseSidebar")) -- Checks Hide Verified if it it not already selected
+
+Repeat 2 Times
+	
+	Repeat with EveryImageLocation(image:"Registration_VerifyCheck_Unverified", SearchRectangle:HandlerGarage.ScreenPart("PreciseSidebar")) reversed
+		Click IT
+	End Repeat
+	
+End Repeat
+
+
+MoveTo (800,500)
+
+Repeat with EveryImageLocation(Image:"Registration_EditPencil", WaitFor:1, SearchRectangle:HandlerGarage.ScreenPart("PreciseSidebar")) reversed
+	Click IT
+	Click text:"25", waitFor:5, SearchRectangle:HandlerGarage.ScreenPart("Sidebar")
+End Repeat
+
+TypeText controlKey,altKey,"u"
+
+If ImageFound(text:"Continue Anyway", waitFor:5, SearchRectangle:HandlerGarage.ScreenPart("Sidebar")) then TypeText controlKey,altKey,"u"

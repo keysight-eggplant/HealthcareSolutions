@@ -1,0 +1,17 @@
+﻿log me.name && "is starting"
+
+Moveto (800,400)
+
+Wait 2
+
+If global myCurrentPatient.GuarantorRelationship is "self" then set global myCurrentPatient.PatientEmployer to global myCurrentPatient.GuarantorEmployer
+
+WaitFor 10, text:"Occupation",SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+Click text:"Employment Status", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), Hotspot: (5,20) -- assumes that Employment Status field is below Employment Status label
+
+TypeText global myCurrentPatient.PatientEmploymentStatus,tab
+TypeText global myCurrentPatient.PatientEmployer, tab
+
+TypeText F8
+
+log me.name && "is ending"

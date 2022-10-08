@@ -1,0 +1,69 @@
+﻿params EpicUsername, EpicPassword, Job, Department, Datafile, StartingRecord, EndingRecord
+
+global myRecordCount, myRecordCounter, myConnectionString, myCurrentPatient
+
+If EpicUsername = "" then
+	Ask "In what environment are you testing?" with "Epic-HD-Test" title "Environment Name"
+	Put IT into EnvironmentName
+	Ask "What is the login user ID?" with "adtpat" title "Login User ID"
+	Put IT into EpicUserID
+	Ask "What is the login user name?" with "PATIENT ACCESS" title "Login User Name"
+	Put IT into EpicUsername
+	Ask "What is the password for user" && EpicUserID && "?" with "xxx" title "Password"
+	Put IT into EpicPassword
+	Ask "What is the user's job?" with "T310200024" title "Job"
+	Put IT into Job
+	Ask "What is the login department ID?" with "20002" title "Department ID"
+	Put IT into DepartmentID
+	Ask "What is the login department name" with "ADMITTING RUBY" title "Department Name"
+	Put IT into DepartmentName
+	Ask "Which file in the Resources folder contains the patients to be created" with "HDREG-1.xlsx" title "Excel file"
+	Put IT into Datafile
+	Ask "What record are you starting with?" with "15" title "Starting Record"
+	Put IT into StartingRecord
+	Ask "What record are you ending with?" with "15" title "Ending Record"
+	Put IT into EndingRecord
+End If
+
+//Bind data to Excel
+set global myConnectionString to (type:"Excel", file:ResourcePath(Datafile),writeable:yes)
+Put the number of records in global myConnectionString into global myRecordCount
+Log "The number of records in this file is" && global myRecordCount
+
+run "LaunchHyperspace" EnvironmentName
+
+run "Login_HD" EpicUserID, EpicPassword, Job, DepartmentID, EpicUsername, DepartmentName
+
+run "SetHyperspaceZeroState"
+
+Run "CheckTitlebar" EpicUsername, DepartmentName
+
+put StartingRecord into myRecordCounter
+If EndingRecord is empty then put global myRecordCount into EndingRecord
+
+Repeat while myRecordCounter <= EndingRecord
+	Set global myCurrentPatient to the record of global myConnectionString where "RecNumber" = myRecordCounter
+	If global myCurrentPatient.MRN is not empty then
+		Log !"This patient [[global myCurrentPatient.PatientName]] already exists"
+		set myRecordCounter = myRecordCounter + 1
+		Set global myCurrentPatient to the record of global myConnectionString where "RecNumber" = myRecordCounter
+	End If
+	Log "The following patient will be created by this process" && global myCurrentPatient.PatientName
+	set global myCurrentPatient.FormattedDOB to !"[[characters 1 to 2 of global myCurrentPatient.DOB]]/[[characters 3 to 4 of global myCurrentPatient.DOB]]/[[characters 5 to 8 of global myCurrentPatient.DOB]]"
+	log "The normalized patient DOB is" && global myCurrentPatient.FormattedDOB
+	//Create Patient
+	Run "CreateNewPatientShell_HD"
+	Run "AddPatientDemographics_HD"
+	Run "AddAdditionalPatientInformation_HD"
+	Run "AddPatientEmployerInformation_HD"
+	Run "AddPCP_HD"
+	Run "AddGuarantor_HD"
+	run "AdHocSetCurrentPatient", 15, "HDREG-1.xlsx"
+	Run "AddCoverage_HD"
+	Run "VerifyAllFromRegistrationSidebar_HD"
+	set global myCurrentPatient.Scratch to "F"
+	set myRecordCounter = myRecordCounter + 1
+End Repeat
+
+
+

@@ -1,0 +1,30 @@
+﻿params EpicUsername, DepartmentName
+
+//Reads contents of title bar to determine what user is logged in
+Wait 1
+Put ReadText (HandlerGarage.ScreenPart("WindowsTitleBar")-((-20,0),(300,0))) split by " - " into TitlebarContents
+Put trim(item 4 of TitlebarContents) into EpicUsernameFromTitlebar
+Put trim(item 5 of TitlebarContents) into DepartmentNameFromTitlebar
+
+If EpicUsernameFromTitlebar does not contain EpicUsername then
+	
+	LogWarning "The user names do not match"
+	Click text:"Log Out", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("HyperspaceToolbar")
+	
+	set global LoggedIn = false
+	Exit handler
+	
+End If
+
+If DepartmentName <> DepartmentNameFromTitlebar then
+	
+	LogWarning "The department names do not match"
+	HandlerGarage.OpenEpicMenuItem "Change Context"
+	WaitFor 5, text:"Change Login Information",SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+	TypeText DepartmentName, tabKey
+	TypeText optionKey,"o"
+	
+End If 
+
+
+

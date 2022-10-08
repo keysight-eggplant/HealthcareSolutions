@@ -1,0 +1,170 @@
+{\rtf1\ansi\ansicpg1252\cocoartf102{\fonttbl\f1\fnil Segoe UI;\f0\fnil Tahoma;}
+{\colortbl;\red127\green0\blue127;\red0\green0\blue0;\red12\green92\blue7;\red68\green71\blue74;\red121\green0\blue11;\red140\green0\blue87;\red155\green79\blue3;\red13\green81\blue148;\red95\green95\blue95;\red104\green33\blue60;\red133\green15\blue193;\red146\green87\blue4;\red34\green112\blue51;\red0\green0\blue0;}
+\f0\fs28\cf1 Suite Snippets->ClickAtIntersectionOfPoints\cf0\fs24\cf2 \par
+@Template\par
+Run HandlerGarage.ClickAtIntersectionOfPoints [rowPoint],[columnPoint]\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Clicks at the intersection of two points\cf0\cf4 \par
+\cf0\cf3 Helpful for selecting checkboxes arranged in rows and columns\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ClickTextAtIntersection\cf0\fs24\cf2 \par
+@Template\par
+Run HandlerGarage.ClickTextAtIntersection [image/text],"[myRowItem]",[image/text],"[myColumnItem]",[mySearchRectangle]\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql This is code to click text at a location defined by the same line as the first image/text occurring beneath the second image/text.\par
+The mySearchRectangle parameter is optional, but if you use it, the search area must include both the row and column headers.\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ProcessMyFilePS\cf0\fs24\cf2 \par
+@Template\par
+Run HandlerGarage.ProcessMyFilePS [CopyMoveDeleteRename],"[myOriginalFileName]","[myOriginalFolder]","[myDestinationFolder]","[myNewFileName]"\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Executes on the local machine or agent and NOT the SUT\cf0\cf4 \par
+\cf0\cf3 Works with any letter drive path that is available to the local machine or agent\cf0\cf4 \par
+\cf0\cf3 Available actions are: Copy, Move, Delete, and Rename\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ReadTextFromBelowImage\cf0\fs24\cf2 \par
+@Template\par
+set [myValue] to HandlerGarage.ReadTextFromBelowImageLocation ([@columnImage],[rowheight], [columnwidth],[contrastYesNo])\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Function to read text at a location below a given image based on the height of the row beneath the image and bounded by a column width\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ReadTextOnSameLine\cf0\fs24\cf2 \par
+@Template\par
+set [myValue] to HandlerGarage.ReadTextOnSameLine ([LineText], [@ColumnImage], [rowHeight], [myCaseSensitiveYesNo], [mySearchRectangle], [myReadTextPattern])\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Function to read text at a location defined by the same line as the line text occurring beneath a column image\cf0\cf4 \par
+\cf0\cf3 mySearchRectangle is an optional parameter to assist to find the line text\cf0\cf4 \par
+\cf0\cf3 myReadTextPattern is an optional parameter that defines the validPattern for the OCR\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ReadTextOnSameLineAsImage\cf0\fs24\cf2 \par
+@Template\par
+HandlerGarage.ReadTextOnSameLineAsImage [@image1],[@image2]\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Function to read text at a location defined by the same line as the first image occurring beneath the second image\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ReturnSearchRectangle\cf0\fs24\cf2 \par
+@Template\par
+set [mySearchArea] to HandlerGarage.ReturnSearchRectangle ([@anchorImage], [width],[height],[x_offset], [y_offset])\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Returns a value for a searchrectangle based on the position of an image\cf0\cf4 \par
+\cf0\cf3 Uses the x and y offset values to move the search area to the right of or below the anchor image\cf0\cf4 \par
+\cf0\cf3 The x and y distances define the width and height of the search area\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ReturnSearchRectangleBasedOnText\cf0\fs24\cf2 \par
+@Template\par
+set [mySearchArea] to HandlerGarage.ReturnSearchRectangleBasedOnText ([anchorText],[width], [height],[x_offset], [y_offset], [mySearchRectangle], [validWordsYN])\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Returns a value for a searchrectangle based on the position of an image\cf0\cf4 \par
+\cf0\cf3 Uses the x and y offset values to move the search area to the right of or below the anchor image\cf0\cf4 \par
+\cf0\cf3 The x and y distances define the width and height of the search area\par
+Compared to the function ReturnSearchRectangle this handler takes two additional parameters\cf0\cf4 \par
+\cf0\cf3 The mySearchRectangle parameter determines where to look for the anchor text\cf0\cf4 \par
+\cf0\cf3 The validWordsYN parameter determines whether the validWords:"*" parameter shall be used by the function\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ScrollToFindImage\cf0\fs24\cf2 \par
+@Template\par
+Run HandlerGarage.ScrollToFindImage [@ImageName],[myMoveToPoint]\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Scrolls down a page to locate an image.\cf0\cf4 \par
+\cf0\cf3 Uses an optional parameter of myMoveToPoint to place cursor within scrollable area.\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ScrollToFindText\cf0\fs24\cf2 \par
+@Template\par
+Run HandlerGarage.ScrollToFindText "[myText]",[mySearchRectangle],[myMoveToPoint],[myValidCharactersYN]\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Scrolls down a page to locate text\cf0\cf4 \par
+\cf0\cf3 Uses the mySearchRectangle parameter to restrict search area for text\cf0\cf4 \par
+\cf0\cf3 Uses an optional parameter of myMoveToPoint to place cursor within scrollable area\cf0\cf4 \par
+\cf0\cf3 Uses a parameter of myValidCharactersYN to assist if text cannot be located\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ScrollUpToFindImage\cf0\fs24\cf2 \par
+@Template\par
+Run HandlerGarage.ScrollUpToFindImage [@ImageName],[myMoveToPoint]\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Scrolls up a page to locate an image.\cf0\cf4 \par
+\cf0\cf3 Uses an optional parameter of myMoveToPoint to place cursor within scrollable area.\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->ScrollUpToFindText\cf0\fs24\cf2 \par
+@Template\par
+Run HandlerGarage.ScrollUpToFindText "[myText]",[mySearchRectangle],[myMoveToPoint],[myValidCharactersYN]\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql Scrolls up a page to locate text\cf0\cf4 \par
+\cf0\cf3 Uses the mySearchRectangle parameter to restrict search area for text\cf0\cf4 \par
+\cf0\cf3 Uses an optional parameter of myMoveToPoint to place cursor within scrollable area\cf0\cf4 \par
+\cf0\cf3 Uses a parameter of myValidCharactersYN to assist if text cannot be located\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->SearchAtIntersectionOfRowAndColumn\cf0\fs24\cf2 \par
+@Template\par
+HandlerGarage.SearchAtIntersectionOfRowAndColumn ([myWaitTime], [myTargetImageOrText],[myTargetValue],[myRowImageOrText],[myRowValue],[myRowSearchArea],[myColumnImageOrText],[myColumnValue],[myColumnSearchArea])\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql This function searches at the intersection of a row and a column for either text or an image\cf0\cf4 \par
+\cf0\cf3 If the text or image is located at the intersection, the function returns TRUE. If not, it returns FALSE\cf0\cf4 \par
+\cf0\cf3 This function calls the function CalculateSearchAreaForIntersectionOfRowAndColumn\cf0\cf4 \par
+\cf0\cf3 This function has optional parameters myRowSearchArea and myColumnSearchArea to narrow search area for those items\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->SetScreenPart\cf0\fs24\cf2 \par
+@Template\par
+HandlerGarage.ScreenPart("[myPortion]")\par
+@Documentation\par
+@Description\par
+\cf0\cf3\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql A function to divide the screen into parts to reduce search times.\cf0\cf4 \par
+\cf0\cf3 Uses an easy-to-maintain property list that stores the necessary multipliers for the specified screen portion parameter value.\par
+\cf0\cf4 \tab \tab \cf0\cf5 TopHalf\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .5\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 BottomHalf\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .5\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 LeftHalf\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 .5\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 RightHalf\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 .5\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 HorizontalMiddle\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .25\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .75\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 VerticalMiddle\cf0\cf6 :((\cf0\cf7 .25\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 .75\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\par
+\cf0\cf4 \tab \tab \cf0\cf5 VerticalMiddleLeft\cf0\cf6 :((\cf0\cf7 .18\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 .75\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 TopLeftQuadrant\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 .5\cf0\cf6 ,\cf0\cf7 .5\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 TopRightQuadrant\cf0\cf6 :((\cf0\cf7 .5\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .5\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 BottomLeftQuadrant\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .5\cf0\cf6 ),(\cf0\cf7 .5\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 BottomRightQuadrant\cf0\cf6 :((\cf0\cf7 .5\cf0\cf6 ,\cf0\cf7 .5\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 Center\cf0\cf6 :((\cf0\cf7 .25\cf0\cf6 ,\cf0\cf7 .25\cf0\cf6 ),(\cf0\cf7 .75\cf0\cf6 ,\cf0\cf7 .75\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 WindowsTitleBar\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .025\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 WindowsTaskBar\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .95\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 Lynde\cf0\cf6 :((\cf0\cf7 .3\cf0\cf6 ,\cf0\cf7 .3\cf0\cf6 ),(\cf0\cf7 .7\cf0\cf6 ,\cf0\cf7 .7\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 BottomTenth\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .90\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 Sidebar\cf0\cf6 :((\cf0\cf7 .8\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 HyperspaceToolbar\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .022\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .044\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 HyperspaceHorizontalTabbar\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .056\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .086\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 HyperspaceTabbar\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 .065\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 HyperspacePatientHeader\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .082\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .165\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 HyperspaceVerticalMiddle\cf0\cf6 :((\cf0\cf7 .35\cf0\cf6 ,\cf0\cf7 0\cf0\cf6 ),(\cf0\cf7 .65\cf0\cf6 ,\cf0\cf7 1\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 CurrentPopup\cf0\cf6 :((\cf0\cf8\b PopupUL_X\cf0\cf6\b0 ,\cf0\cf8\b PopupUL_Y\cf0\cf6\b0 ),(\cf0\cf8\b PopupBR_X\cf0\cf6\b0 ,\cf0\cf8\b PopupBR_Y\cf0\cf6\b0 )),\cf0\cf4  \cf0\cf3 -- Epic specific, but can be modified for other UIs\cf0\cf4 \par
+\tab \tab \cf0\cf5 CurrentPopupUL\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 .12\cf0\cf6 ,\cf0\cf7 .026\cf0\cf6 ),(\cf0\cf7 .35\cf0\cf6 ,\cf0\cf7 .35\cf0\cf6 )),\cf0\cf4 \par
+\tab \tab \cf0\cf5 PreciseSidebar\cf0\cf6 :((\cf0\cf8\b SidebarUL_X\cf0\cf6\b0 ,\cf0\cf8\b SidebarUL_Y\cf0\cf6\b0 ),(\cf0\cf8\b SidebarBR_X\cf0\cf6\b0 ,\cf0\cf8\b SidebarBR_Y\cf0\cf6\b0 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 CoveragePayorPlanSummaryBox\cf0\cf6 :((\cf0\cf7 .222\cf0\cf6 ,\cf0\cf7 .192\cf0\cf6 ),(\cf0\cf7 .663\cf0\cf6 ,\cf0\cf7 .30\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 ClinicalDocumentationArea\cf0\cf6 :((\cf0\cf7 .13\cf0\cf6 ,\cf0\cf7 .145\cf0\cf6 ),(\cf0\cf7 .81\cf0\cf6 ,\cf0\cf7 .95\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 MessageViewerSegmentArea\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 .077\cf0\cf6 ,\cf0\cf7 .15\cf0\cf6 ),(\cf0\cf7 .11\cf0\cf6 ,\cf0\cf7 .55\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 Storyboard\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .09\cf0\cf6 ),(\cf0\cf7 .14\cf0\cf6 ,\cf0\cf7 .96\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 ChartReviewLeftPanel\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 .13\cf0\cf6 ,\cf0\cf7 .21\cf0\cf6 ),(\cf0\cf7 .45\cf0\cf6 ,\cf0\cf7 .91\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 ChartReviewRightPanel\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 .45\cf0\cf6 ,\cf0\cf7 .21\cf0\cf6 ),(\cf0\cf7 .77\cf0\cf6 ,\cf0\cf7 .91\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 NavigatorList\cf0\cf6 :\cf0\cf4  \cf0\cf6 ((\cf0\cf7 .119\cf0\cf6 ,\cf0\cf7 .146\cf0\cf6 ),(\cf0\cf7 .23\cf0\cf6 ,\cf0\cf7 .96\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\cf0\cf4 \par
+\tab \tab \cf0\cf5 TabbedNoteTypes\cf0\cf6 :((\cf0\cf7 .12\cf0\cf6 ,\cf0\cf7 .18\cf0\cf6 ),(\cf0\cf7 .80\cf0\cf6 ,\cf0\cf7 .216\cf0\cf6 )),\cf0\cf4  \cf0\cf3 -- Epic specific\par
+\cf0\cf9 \tab \tab \cf0\cf10 LoginSearchArea\cf0\cf11 :((\cf0\cf12 .340\cf0\cf11 ,\cf0\cf9  \cf0\cf12 .324\cf0\cf11 ),\cf0\cf9  \cf0\cf11 (\cf0\cf12 0.661\cf0\cf11 ,\cf0\cf9  \cf0\cf12 0.622\cf0\cf11 ))\cf0\cf9  \cf0\cf13 --Epic specific\cf0\cf4 \par
+\tab \f1\fs40 \tab \tab \cf0\cf5 HyperspaceReportButtons\cf0\cf6 :((\cf0\cf7 0\cf0\cf6 ,\cf0\cf7 .095\cf0\cf6 ),(\cf0\cf7 1\cf0\cf6 ,\cf0\cf7 .158\cf0\cf6 )),\cf0\cf4  \cf0\cf3\i -- Epic specific\cf0\cf4\i0 \par
+\tab \tab \cf0\cf5 IFS\cf0\cf6 :((\cf0\cf7 .220\cf0\cf6 ,\cf0\cf7 .192\cf0\cf6 ),(\cf0\cf7 .833\cf0\cf6 ,\cf0\cf7 .962\cf0\cf6 ))\cf0\cf4  \cf0\cf3\i -- Epic specific\cf0\cf4\f0\fs24\i0 \par
+\pard\ql\cf0\cf2 \par
+@@@\par
+\cf0\fs28\cf1 Suite Snippets->AdHocSetCurrentPatient\cf0\fs24\cf2 \par
+@Template\par
+run "AdHocSetCurrentPatient", [PatientNumber], "[DataFileName]"\par
+@Documentation\par
+@Description\par
+\cf0\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\ql\cf14\fs30 (enter snippet description here)\pard\ql\cf0\fs24\cf2 \par
+@@@\par
+}

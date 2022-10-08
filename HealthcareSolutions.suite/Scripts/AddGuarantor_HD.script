@@ -1,0 +1,41 @@
+﻿global myCurrentPatient
+
+Click text:"Pat Guar and Cvg", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("HyperspaceActivityButtons")
+WaitFor 10, text:"Patient Guarantors and Coverages",SearchRectangle:HandlerGarage.ScreenPart("HyperspaceActivityButtons")
+TypeText optionKey, shiftKey, "r"
+
+If ImageFound(text:"Guarantor Search", waitFor:5, SearchRectangle:HandlerGarage.ScreenPart("Lynde")) then
+	Click text:global myCurrentPatient.GuarantorRelationship, waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+	WaitFor 5, text:"Has this guarantor", SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+	Put (FoundImageLocation(),FoundImageLocation()) + ((0, 25),(300, 50)) into myNoRecordSearchArea
+	Click text:"No Record", waitFor:1, SearchRectangle:myNoRecordSearchArea
+	Click text:"Date of Birth", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("Lynde"), HotSpot: (5,25)
+	TypeText "y-50",tab
+	If global myCurrentPatient.GuarantorRelationship = "mother" then
+		TypeText "f",tab
+	Else
+		TypeText "m",tab
+	End If
+End If
+
+TypeText optionKey,"a"
+If ImageFound(text:"No Accounts Found", waitFor:2,SearchRectangle:HandlerGarage.ScreenPart("Lynde")) then
+	TypeText optionKey,"r"
+End If
+
+WaitFor 15.0, "Registration_PersonalFamilyGuarantorIcon"
+WaitFor 10, text:"County", SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")
+TypeText optionKey,"u"
+
+If global myCurrentPatient.GuarantorRelationship = "self" then
+	TypeText optionKey,"u"
+Else
+	TypeText optionKey,"d"
+End If
+
+WaitFor 10, text:global myCurrentPatient.ZipCode,SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+Click text:"SSN", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), HotSpot: (5,25)
+TypeText "222222222",tab
+Click text:"Employment Status", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("Center"), HotSpot: (5,25)
+TypeText global myCurrentPatient.GuarantorEmploymentStatus,tab
+TypeText global myCurrentPatient.GuarantorEmployer,tab
