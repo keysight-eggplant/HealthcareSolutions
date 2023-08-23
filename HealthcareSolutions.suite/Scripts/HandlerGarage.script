@@ -19,7 +19,7 @@ function ReturnSearchRectangle image, x_distance, y_distance, x_offset, y_offset
 	set BR_Search=(EndRightSearch,EndBottomSearch)
 	set thevalue to (UL_Search,BR_Search)
 	
-	log "The search reactangle is"&&thevalue
+	log "The search rectangle is"&&thevalue
 	return thevalue
 	
 end ReturnSearchRectangle
@@ -229,7 +229,7 @@ on ProcessMyFilePS myAction, myOriginalFileName, myOriginalFolder, myDestination
 	End if
 	
 	put "2>&1" into myOutputCommand -- the 2>&1 sends both the STDOUT and STDERR to the output file
-	put command  &" > " & quote &ResourcePath(myAuditFile)&quote && myOutputCommand into CommandExecute 
+	put command  &" > " & quote &ResourcePath(myAuditFile)&quote && myOutputCommand into CommandExecute
 	log "The shell command is"&&CommandExecute
 	
 	shell "c:\windows\system32\cmd.exe", << /c ">>& CommandExecute &<<">>
@@ -281,7 +281,7 @@ on ScrollToFindImage ImageName,myMoveToPoint
 	
 	If FoundImageLocation() <> "" then MoveTo FoundImageLocation() - (-30,30)
 	
-	If myMoveToPoint <> "" then MoveTo myMoveToPoint	
+	If myMoveToPoint <> "" then MoveTo myMoveToPoint
 	
 	Repeat until ImageFound(Image:ImageName, WaitFor:1)
 		ScrollWheelDown 2
@@ -507,7 +507,7 @@ function SearchAtIntersectionOfRowAndColumn myWaitTime, myTargetImageOrText, myT
 			End If
 			Exit Handler
 			
-		... myTargetImageOrText = "Image" and myRowImageOrText = "Image" and myColumnImageOrText ="Text" then		
+		... myTargetImageOrText = "Image" and myRowImageOrText = "Image" and myColumnImageOrText ="Text" then
 			set myRowRectangle to ImageRectangle(imageName:myRowValue, SearchRectangle:myRowSearchArea)
 			set myColumnRectangle to ImageRectangle(text:myColumnValue, SearchRectangle:myColumnSearchArea)
 			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
@@ -540,7 +540,7 @@ function SearchAtIntersectionOfRowAndColumn myWaitTime, myTargetImageOrText, myT
 			End If
 			Exit Handler
 			
-		... myTargetImageOrText = "Text" and myRowImageOrText = "Image" and myColumnImageOrText ="Image" then			
+		... myTargetImageOrText = "Text" and myRowImageOrText = "Image" and myColumnImageOrText ="Image" then
 			set myRowRectangle to ImageRectangle(imageName:myRowValue, SearchRectangle:myRowSearchArea)
 			set myColumnRectangle to ImageRectangle(imageName:myColumnValue, SearchRectangle:myColumnSearchArea)
 			set myTargetSearchArea to CalculateSearchAreaForIntersectionOfRowAndColumn(myRowRectangle,myColumnRectangle)
@@ -581,6 +581,8 @@ function CalculateSearchAreaForIntersectionOfRowAndColumn myRowRectangle, myColu
 	Return tmpSearchArea
 	
 end CalculateSearchAreaForIntersectionOfRowAndColumn
+
+---------------------------------------------------------------------------------
 
 //function to divide the screen into parts to reduce search times
 function ScreenPart Portion
@@ -797,7 +799,7 @@ to handle OpenEpicMenuItem EpicMenuItem
 	else
 		TypeText controlKey,spacebar
 		Wait 2
-		Put ImageRectangle(text:"Search Activities", waitFor:10,SearchRectangle:HandlerGarage.ScreenPart("TopLeftQuadrant")) + [0,20,0,40] into ActivitySearchArea
+		Put ImageRectangle(text:"Search Activities", waitFor:10, validWords:"*", textDifference: 2, SearchRectangle:(2,60,460,659)) + [0,20,0,40] into ActivitySearchArea
 		TypeText EpicMenuItem
 		WaitFor 10, text:EpicMenuItem,SearchRectangle:ActivitySearchArea
 	end if

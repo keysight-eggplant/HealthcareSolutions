@@ -1,6 +1,9 @@
-﻿global myCurrentPatient
+﻿log me.name && "has started"
 
-Click text:"Pat Guar and Cvg", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("HyperspaceActivityButtons")
+AdHocSetCurrentPatient 1,"HDREG-1.xlsx"
+global myCurrentPatient
+
+Click text:"Pat Guar and Cvg", waitFor:1, validWords:"*", SearchRectangle:HandlerGarage.ScreenPart("HyperspaceActivityButtons")
 WaitFor 10, text:"Patient Guarantors and Coverages",SearchRectangle:HandlerGarage.ScreenPart("HyperspaceActivityButtons")
 TypeText optionKey, shiftKey, "r"
 

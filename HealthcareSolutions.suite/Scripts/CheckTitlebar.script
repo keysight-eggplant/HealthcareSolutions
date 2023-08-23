@@ -9,7 +9,7 @@ Put trim(item 5 of TitlebarContents) into DepartmentNameFromTitlebar
 If EpicUsernameFromTitlebar does not contain EpicUsername then
 	
 	LogWarning "The user names do not match"
-	Click text:"Log Out", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("HyperspaceToolbar")
+	Click text:"Log Out", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("HyperspaceToolbar"), ignoreSpaces: yes
 	
 	set global LoggedIn = false
 	Exit handler

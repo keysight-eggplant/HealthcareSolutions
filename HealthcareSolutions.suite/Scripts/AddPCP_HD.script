@@ -6,7 +6,7 @@ Wait 2
 
 WaitFor 10, text:"Search current and past team members",SearchRectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")
 
-Click text:"Add PCP", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("TopLeftQuadrant"), Hotspot:(200,5)
+Click text:"Add PCP", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), Hotspot:(200,5)
 TypeText global myCurrentPatient.PCP, tab
 Wait 2
 WaitFor 10, text:global myCurrentPatient.PCP, SearchRectangle:HandlerGarage.ScreenPart("Center")

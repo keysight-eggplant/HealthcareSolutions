@@ -4,6 +4,7 @@ WaitFor 10, text:"Veteran Status", SearchRectangle:HandlerGarage.ScreenPart("Cha
 
 Click ImageLocation(text:"Resident of State", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")) + (0,25)
 TypeText global myCurrentPatient.ResidentOfState, tab
+
 TypeText global myCurrentPatient.MaritalStatus, tab
 TypeText global myCurrentPatient.Religion, tab
 TypeText global myCurrentPatient.Language, tab
