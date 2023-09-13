@@ -66,12 +66,12 @@ function ReadTextOnSameLine LineText, image1, rowheight, myCaseSensitive, mySear
 	if myCaseSensitive = "" then set myCaseSensitive to "no"
 	
 	if mySearchRectangle = "" then
-		put ImageRectangle(Text:LineText,WaitFor:5,caseSensitive:myCaseSensitive,ignoreSpaces:Yes) into ImageRectangle1
+		put ImageRectangle(Text:LineText,WaitFor:5,caseSensitive:myCaseSensitive,ignoreSpaces:Yes) into ImageRectangle1 -- creates rectangle based on row text
 	Else
 		put ImageRectangle(Text:LineText,WaitFor:5,caseSensitive:myCaseSensitive, SearchRectangle:mySearchRectangle,ignoreSpaces:Yes) into ImageRectangle1
 	end if
 	
-	put ImageRectangle(Image:image1,WaitFor:5) into ImageRectangle2
+	put ImageRectangle(Image:image1,WaitFor:5) into ImageRectangle2 -- create rectangle based on column image
 	set StartLeftSearch = left(ImageRectangle2)
 	set StartTopSearch = top(ImageRectangle1) - 2
 	set EndRightSearch = right(ImageRectangle2)
@@ -812,7 +812,30 @@ to handle OpenEpicMenuItem EpicMenuItem
 	
 end OpenEpicMenuItem
 
-
+on TripleClick myImageOrText, myItemToClick, mySearchRectangle, myValidWordsYN
+	If mySearchRectangle is empty then put RemoteScreenRectangle() into mySearchRectangle
+	Put [(myImageOrText):myItemToClick, SearchRectangle:mySearchRectangle] into myClickProperties
+	If myValidWordsYN = "Y" then Put [(myImageOrText):myItemToClick, SearchRectangle:mySearchRectangle, validWords:"*"] into myClickProperties
+	If myImageOrText = "coordinates" then Put myItemToClick into myClickProperties
+	Log "The TripleClick properties are" && myClickProperties
+	
+	// The next 3 lines change the timing between Eggplant Functional commands so that 3 quick clicks can be sent in succession.
+	
+	put the RemoteWorkInterval into defaultRWI -- stores the current Remote Work Interval value so that it can be restored later
+	put the MouseDoubleClickDelay into clickTime -- gets the current time interval between clicks in a double-click
+	set the RemoteWorkInterval to clickTime -- sets the Remote Work Interval to the double-click time
+	
+	// These 3 lines click the image once and then click twice more in the same location.
+	
+	Click (myClickProperties)
+	Click -- quickly clicks in the current mouse location
+	Click -- quickly clicks again in the same location to achieve a triple-click
+	
+	// The last line restores the timing between Eggplant Functional commands by resetting the RemoteWorkInterval global property to its original value.
+	
+	set the RemoteWorkInterval to defaultRWI
+	
+end TripleClick
 
 
 
