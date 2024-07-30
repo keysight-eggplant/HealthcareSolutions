@@ -1,2 +1,27 @@
 ﻿HandlerGarage.TripleClick "coordinates", (375,242),"N"
 
+Click text:"Preferred Language", waitFor:1,hotspot:(0,20)
+
+//Bind data to Excel
+set global myConnectionString to (type:"Excel", file:ResourcePath("HDREG-1.xlsx"),name:"Current",writeable:yes)
+Put the number of records in global myConnectionString into global myRecordCount
+Log "The number of records in this file is" && global myRecordCount
+
+
+Put the records of global myConnectionString into myLocalPatients
+
+put each item of myLocalPatients whose "RecNumber" = 1007
+
+Put ImageLocation(text:"Poct", waitfor:1, validWords:"*", searchrectangle:HandlerGarage.ScreenPart("ChartReviewRightPanel")) into DropdownClick
+Click FoundImageLocation()
+Click text:"POCT", waitfor:10, searchrectangle:HandlerGarage.ScreenPart("VerticalMiddle")
+wait 2
+
+put ImageRectangle(text:"MRN", waitFor:1,SearchRectangle:HandlerGarage.ScreenPart("Storyboard"))
+
+set myRowSearchArea to HandlerGarage.ScreenPart("Storyboard")
+set myColumnSearchArea to HandlerGarage.ScreenPart("HyperspacePatientHeader")
+Log HandlerGarage.SearchAtIntersectionOfRowAndColumn (1, Text,"MRN",Text,"Fred",myRowSearchArea,Text,"1100",myColumnSearchArea)
+
+
+

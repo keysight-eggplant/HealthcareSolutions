@@ -1,0 +1,54 @@
+﻿set screenPortions to {
+	TopHalf: ((0,0),(1,.5)),
+	BottomHalf: ((0,.5),(1,1)),
+	LeftHalf: ((0,0),(.5,1)),
+	RightHalf: ((.5,0),(1,1)),
+	HorizontalMiddle: ((0,.25),(1,.75)),
+	VerticalMiddle:((.25,0),(.75,1)),
+	TopLeftQuadrant:((0,0),(.5,.5)),
+	TopRightQuadrant:((.5,0),(1,.5)),
+	BottomLeftQuadrant:((0,.5),(.5,1)),
+	BottomRightQuadrant:((.5,.5),(1,1)),
+	Center:((.25,.25),(.75,.75)),
+	WindowsTitleBar:((0,0),(1,.025)),
+	WindowsTaskBar:((0,.95),(1,1)),
+	Lynde:((.3,.3),(.7,.7)),
+	BottomTenth:((0,.90),(1,1)),
+	Sidebar:((.8,0),(1,1)), -- Epic specific
+	HyperspaceTitleBar:((0,0),(1,.031)), -- Epic specific (0,1,1920,58)
+	HyperspaceToolbar:((0,.031),(1,.054)), -- Epic specific
+	HyperspaceHorizontalTabbar:((0,.054),(1,.079)), -- Epic specific
+	HyperspaceTabbar:((0,0),(.065,1)), -- Epic specific (0,1,1920,85)
+	HyperspacePatientHeader:((0,.082),(1,.180)), -- Epic specific
+	HyperspaceVerticalMiddle:((.35,0),(.65,1)), -- Epic specific
+	//CurrentPopup:((PopupUL_X,PopupUL_Y),(PopupBR_X,PopupBR_Y)), -- Epic specific, but can be modified for other UIs
+	CurrentPopupUL: ((.12,.026),(.35,.35)),
+	PreciseSidebar:((SidebarUL_X,SidebarUL_Y),(SidebarBR_X,SidebarBR_Y)), -- Epic specific
+	CoveragePayorPlanSummaryBox:((.222,.192),(.663,.30)), -- Epic specific
+	ClinicalDocumentationArea:((.13,.145),(.81,.95)), -- Epic specific
+	MessageViewerSegmentArea: ((.077,.15),(.11,.55)), -- Epic specific
+	Storyboard: ((0,.09),(.14,.96)), -- Epic specific
+	ChartReviewLeftPanel: ((.13,.21),(.45,.91)), -- Epic specific
+	ChartReviewRightPanel: ((.45,.21),(.77,.91)), -- Epic specific
+	NavigatorList: ((.119,.146),(.23,.96)), -- Epic specific
+	TabbedNoteTypes:((.12,.18),(.80,.216)), -- Epic specific
+	HyperspaceReportButtons:((0,.095),(1,.158)), -- Epic specific
+	IFS:((.220,.192),(.833,.962)), -- Epic specific
+	LoginSearchArea:((.343,.356),(.658,.574)), -- Epic specific
+	TriageScreeningMenu:((.198,.179),(.984,.96)), -- Epic specific
+	TriageMenuList:((.118,.177),(.196,.509)), -- Epic specific
+	EDManagerWaiting:((.026,.765),(.161,.858)), -- Epic specific
+	GuarantorVerification:((.842,.212),(.995,.305)), -- Epic specific
+	VerificationsRemaining:((.844,.17),(.997,.95)), -- Epic specific
+	HyperspaceActivityButtons:((.120,.125),(.763,.184)), -- Epic specific
+	TrackBoardColumns:((0,.155),(1,.191)), -- Epic specific
+	LevelOfService:((0.6, 0.603),(0.822, 0.92)) -- Epic specific ((0.6, 0.603),(0.822, 0.92)) ((.602, .481),(0.820, 0.906))
+	}
+	Put the keys of screenportions into myScreenPartsList
+	
+	Repeat with each item myCurrentScreenPart of myScreenPartsList
+		HighlightRectangle HandlerGarage.ScreenPart(myCurrentScreenPart), duration:5 seconds //Defines the rectangle based on the ImageLocation() of two images
+		Answer "The current region is:"&&myCurrentScreenPart with "Ok" title "ScreenPart Tester" timeout 5
+		
+		
+	End Repeat

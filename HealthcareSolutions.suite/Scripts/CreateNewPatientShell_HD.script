@@ -27,6 +27,8 @@ TypeText optionKey, "a"
 Wait 2
 WaitFor 10, image:"HyperspaceWrench", SearchRectangle:HandlerGarage.ScreenPart("BottomRightQuadrant")
 WaitFor 10, text:"PCP", SearchRectangle:HandlerGarage.ScreenPart("Sidebar")
+Click text:"Allergies", waitFor:5,SearchRectangle:HandlerGarage.ScreenPart("NavigatorList")
+
 
 //Reads MRN value
 Wait 2

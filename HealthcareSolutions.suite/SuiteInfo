@@ -1,1 +1,1 @@
-﻿{EPVersionNumber = 202307120950; Schedules = (); ScriptMetaData = {}; SuiteEncodedTextKey = "o#pIvuhS)-9;&8kf"; helpedSuitesInfo = ({filePath = "OngoingIntermountain.suite"; }); helperSuitesInfo = (); }
+﻿{EPVersionNumber = 202405101256; Schedules = (); ScriptMetaData = {}; SuiteEncodedTextKey = "o#pIvuhS)-9;&8kf"; helpedSuitesInfo = ({filePath = "OngoingIntermountain.suite"; }, {filePath = "Training.suite"; }, {filePath = "NothingButSand.suite"; }); helperSuitesInfo = (); }

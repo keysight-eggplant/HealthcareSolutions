@@ -26,7 +26,7 @@ If EpicUsername = "" then
 End If
 
 //Bind data to Excel
-set global myConnectionString to (type:"Excel", file:ResourcePath(Datafile),writeable:yes)
+set global myConnectionString to (type:"Excel", file:ResourcePath("HDREG-1.xlsx"),name:"Current",writeable:yes)
 Put the number of records in global myConnectionString into global myRecordCount
 Log "The number of records in this file is" && global myRecordCount
 

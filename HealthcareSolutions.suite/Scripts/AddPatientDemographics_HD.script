@@ -24,19 +24,19 @@ TypeText optionKey, shiftKey, "t"
 If ImageFound(text:"Address and Phone Update", waitFor:2, SearchRectangle:HandlerGarage.ScreenPart("Lynde")) then TypeText optionKey, "a"
 WaitFor 10, text:"Inactive Contacts", SearchRectangle:HandlerGarage.ScreenPart("TopRightQuadrant")
 TypeText Return
-	WaitFor 10, text:"Add Contact", SearchRectangle:HandlerGarage.ScreenPart("Lynde")
-	TypeText global myCurrentPatient.EmergencyContactName, tab
-	TypeText global myCurrentPatient.EmergencyContactRelationship, tab
-	TypeText global myCurrentPatient.HomePhone, tab
-	Click text:"Home", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("Lynde")
-	If global myCurrentPatient.GuarantorRelationship <> "Self" then
-		set myLegalGuardianResponseArea to ImageRectangle(text:"Legal Guardian", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("Lynde")) + (100,-2, 300, 2)
-		Click text:"Yes", waitFor:1, SearchRectangle: myLegalGuardianResponseArea
-	End If
-	TypeText optionKey, "a"
-	WaitFor 10, text: global myCurrentPatient.EmergencyContactName, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), IgnoreSpaces: yes
-	TypeText controlKey,"q"
-	WaitFor 10, text: "County", SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
+WaitFor 10, text:"Add Contact", SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+TypeText global myCurrentPatient.EmergencyContactName, tab
+TypeText global myCurrentPatient.EmergencyContactRelationship, tab
+TypeText global myCurrentPatient.HomePhone, tab
+Click text:"Home", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("Lynde")
+If global myCurrentPatient.GuarantorRelationship <> "Self" then
+	set myLegalGuardianResponseArea to ImageRectangle(text:"Legal Guardian", waitFor:1, SearchRectangle:HandlerGarage.ScreenPart("Lynde")) + (100,-2, 300, 2)
+	Click text:"Yes", waitFor:1, SearchRectangle: myLegalGuardianResponseArea
+End If
+TypeText optionKey, "a"
+WaitFor 10, text: global myCurrentPatient.EmergencyContactName, SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel"), IgnoreSpaces: yes
+TypeText controlKey,"q"
+WaitFor 10, text: "County", SearchRectangle:HandlerGarage.ScreenPart("ChartReviewLeftPanel")
 
 
 TypeText F8

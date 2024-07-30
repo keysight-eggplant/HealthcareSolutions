@@ -4,7 +4,7 @@ if global LoggedIn = true then Run "CheckTitlebar" EpicUsername, DepartmentName
 
 if global LoggedIn = true then Exit handler
 
-WaitFor 60, "Hyperspace_SunAndMoon_Icon"
+WaitFor 60, image:"Hyperspace_SunAndMoon_Icon"
 
 WaitFor 5, text:"User ID",SearchRectangle:HandlerGarage.ScreenPart("Lynde")
 Click FoundImageLocation()
