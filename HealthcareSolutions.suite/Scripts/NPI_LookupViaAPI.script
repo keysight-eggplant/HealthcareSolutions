@@ -1,0 +1,21 @@
+﻿put "https://npiregistry.cms.hhs.gov/api/?" into myBaseURL
+put "number=" into myQueryType
+put "&enumeration_type=&taxonomy_description=&name_purpose=&first_name=&use_first_name_alias=&last_name=&organization_name=&address_purpose=&city=&state=&postal_code=&country_code=&limit=&skip=&pretty=on&version=2.1" into myQueryEnding
+put [1518404169,1477597763, 1659833671, 1295492775, 1497950976] into myIDList
+
+repeat with each myID of myIDList
+	put !"[[myBaseURL]][[myQueryType]][[myID]][[myQueryEnding]]" into myQueryURL
+	log myQueryURL
+	
+	put "JSON (application/json)" into RBF
+	put "application/json" into RH."Content-Type"
+	put "keep-alive" into RH."Connection"
+	
+	EmptyAPI(httpMethod:"GET",url:myQueryURL,requestheaders:RH,requestBody:JSONFormat(RB),requestbodyformat:RBF)
+	put JSONValue(api().responsebody) into Response
+	put item 1 of (each item of response.results.addresses where each."address_purpose" equals "location") into myPrimaryAddress
+	put response.results.basic into myProviderDemographics
+	
+	put !<<The primary address of [[myProviderDemographics."first_name"]] [[myProviderDemographics."last_name"]] [[myProviderDemographics."credential"]] is [[myPrimaryAddress."address_1"]] [[myPrimaryAddress."city"]] [[myPrimaryAddress."state"]] [[myPrimaryAddress."postal_code"]]>>
+	put !<<The primary practice's telephone number is [[myPrimaryAddress."telephone_number"]] and their fax number is [[myPrimaryAddress."fax_number"]]>>
+end repeat

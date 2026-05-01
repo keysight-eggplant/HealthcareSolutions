@@ -154,18 +154,19 @@ end ClickAtIntersectionOfPoints
 ---------------------------------------------------------------------------------
 
 //code to click text at a location defined by the same line as the first image/text occurring beneath the second image/text
-on ClickTextAtIntersection myRowItemType,myRowItem,myColumnItemType,myColumnItem,mySearchRectangle
+//This command takes two SearchRectangle parameters. The first is for the row header and the second is for the column header
+on ClickTextAtIntersection myRowItemType,myRowItem,myColumnItemType,myColumnItem,mySearchRectangle1,mySearchRectangle2
 
 	If MyRowItemType = "text" then
-		put ImageRectangle(text:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle1
-	Else
-		put ImageRectangle(image:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle1
+		put ImageRectangle(text:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle1) into ImageRectangle1
+		Else
+		put ImageRectangle(image:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle1) into ImageRectangle1
 	End If
 	
 	If MyColumnItemType = "text" then
-		put ImageRectangle(text:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle2
+		put ImageRectangle(text:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle2) into ImageRectangle2
 	Else
-		put ImageRectangle(image:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle) into ImageRectangle2
+		put ImageRectangle(image:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle2) into ImageRectangle2
 	End If
 	
 	set StartLeftSearch = left(ImageRectangle2)
@@ -182,6 +183,64 @@ on ClickTextAtIntersection myRowItemType,myRowItem,myColumnItemType,myColumnItem
 	log "The text at this position is"&&thevalue
 	
 end ClickTextAtIntersection
+
+---------------------------------------------------------------------------------
+
+//code to return text at a location defined by the same line as the first image/text occurring beneath the second image/text
+//This command takes two SearchRectangle parameters. The first is for the row header and the second is for the column header
+function ReadTextAtIntersection myRowItemType,myRowItem,myColumnItemType,myColumnItem,mySearchRectangle1,mySearchRectangle2
+
+	If MyRowItemType = "text" then
+		put ImageRectangle(text:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle1) into ImageRectangle1
+	Else
+		put ImageRectangle(image:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle1) into ImageRectangle1
+	End If
+	
+	If MyColumnItemType = "text" then
+		put ImageRectangle(text:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle2) into ImageRectangle2
+	Else
+		put ImageRectangle(image:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle2) into ImageRectangle2
+	End If
+	
+	set StartLeftSearch = left(ImageRectangle2)
+	set StartTopSearch = top(ImageRectangle1)
+	set EndRightSearch = right(ImageRectangle2)
+	set EndBottomSearch = bottom(ImageRectangle1) + 2
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	set thevalue to ReadText(UL_Search,BR_Search)
+	
+	Return thevalue
+	
+end ReadTextAtIntersection
+
+---------------------------------------------------------------------------------
+
+//code to click a point at a location defined by the same line as the first image/text occurring beneath the second image/text
+//This command takes two SearchRectangle parameters. The first is for the row header and the second is for the column header
+on ClickPointAtIntersection myRowItemType,myRowItem,myColumnItemType,myColumnItem,mySearchRectangle1,mySearchRectangle2
+
+	If MyRowItemType = "text" then
+		put ImageRectangle(text:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle1) into ImageRectangle1
+	Else
+		put ImageRectangle(image:MyRowItem,WaitFor:5,SearchRectangle:mySearchRectangle1) into ImageRectangle1
+	End If
+	
+	If MyColumnItemType = "text" then
+		put ImageRectangle(text:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle2) into ImageRectangle2
+	Else
+		put ImageRectangle(image:MyColumnItem,WaitFor:5,SearchRectangle:mySearchRectangle2) into ImageRectangle2
+	End If
+	
+	set StartLeftSearch = left(ImageRectangle2)
+	set StartTopSearch = top(ImageRectangle1)
+	set EndRightSearch = right(ImageRectangle2)
+	set EndBottomSearch = bottom(ImageRectangle1) + 2
+	set UL_Search=(StartLeftSearch,StartTopSearch)
+	set BR_Search=(EndRightSearch,EndBottomSearch)
+	click the center of (UL_Search,BR_Search)
+	
+end ClickPointAtIntersection
 
 ---------------------------------------------------------------------------------
 
@@ -208,7 +267,7 @@ on ProcessMyFilePS myAction, myOriginalFileName, myOriginalFolder, myDestination
 	Log "Preparing to"&&myAction&&"file:"&&myOriginalFileName&&"from"&&myOriginalFolder&&"to"&&myDestinationFolder
 	
 	//Creates an audit file named for the action being performed
-	//Text file will initially be populated with a generic message
+//Text file will initially be populated with a generic message
 	//Shell command called below will overwrite the text based on success or error
 	Set myAuditFile to myAction&".txt"
 	Log "Errors (if any) will be logged in"&&myAuditFile
@@ -728,39 +787,39 @@ function ScreenPart Portion
 	
 	
 	set screenPortions to {
-	TopHalf: ((0,0),(1,.5)),
-	BottomHalf: ((0,.5),(1,1)),
-	LeftHalf: ((0,0),(.5,1)),
-	RightHalf: ((.5,0),(1,1)),
-	HorizontalMiddle: ((0,.25),(1,.75)),
-	VerticalMiddle:((.25,0),(.75,1)),
-	TopLeftQuadrant:((0,0),(.5,.5)),
-	TopRightQuadrant:((.5,0),(1,.5)),
-	BottomLeftQuadrant:((0,.5),(.5,1)),
-	BottomRightQuadrant:((.5,.5),(1,1)),
-	Center:((.25,.25),(.75,.75)),
-	WindowsTitleBar:((0,0),(1,.025)),
-	WindowsTaskBar:((0,.95),(1,1)),
-	Lynde:((.3,.3),(.7,.7)),
-	BottomTenth:((0,.90),(1,1)),
-	Sidebar:((.8,0),(1,1)), -- Epic specific
-	HyperspaceTitleBar:((0,0),(1,.031)), -- Epic specific (0,1,1920,58)
-	HyperspaceToolbar:((0,.031),(1,.054)), -- Epic specific
-	HyperspaceHorizontalTabbar:((0,.054),(1,.079)), -- Epic specific
-	HyperspaceTabbar:((0,0),(.065,1)), -- Epic specific (0,1,1920,85)
-	HyperspacePatientHeader:((0,.082),(1,.180)), -- Epic specific
-	HyperspaceVerticalMiddle:((.35,0),(.65,1)), -- Epic specific
-	CurrentPopup:((PopupUL_X,PopupUL_Y),(PopupBR_X,PopupBR_Y)), -- Epic specific, but can be modified for other UIs
-	CurrentPopupUL: ((.12,.026),(.35,.35)),
-	PreciseSidebar:((SidebarUL_X,SidebarUL_Y),(SidebarBR_X,SidebarBR_Y)), -- Epic specific
-	CoveragePayorPlanSummaryBox:((.222,.192),(.663,.30)), -- Epic specific
-	ClinicalDocumentationArea:((.13,.145),(.81,.95)), -- Epic specific
-	MessageViewerSegmentArea: ((.077,.15),(.11,.55)), -- Epic specific
-	Storyboard: ((0,.09),(.14,.96)), -- Epic specific
-	ChartReviewLeftPanel: ((.13,.21),(.45,.91)), -- Epic specific
-	ChartReviewRightPanel: ((.45,.21),(.77,.91)), -- Epic specific
-	NavigatorList: ((.119,.146),(.23,.96)), -- Epic specific
-	TabbedNoteTypes:((.12,.18),(.80,.216)), -- Epic specific
+		TopHalf: ((0,0),(1,.5)),
+		BottomHalf: ((0,.5),(1,1)),
+		LeftHalf: ((0,0),(.5,1)),
+		RightHalf: ((.5,0),(1,1)),
+		HorizontalMiddle: ((0,.25),(1,.75)),
+		VerticalMiddle:((.25,0),(.75,1)),
+		TopLeftQuadrant:((0,0),(.5,.5)),
+		TopRightQuadrant:((.5,0),(1,.5)),
+		BottomLeftQuadrant:((0,.5),(.5,1)),
+		BottomRightQuadrant:((.5,.5),(1,1)),
+		Center:((.25,.25),(.75,.75)),
+		WindowsTitleBar:((0,0),(1,.025)),
+		WindowsTaskBar:((0,.95),(1,1)),
+		Lynde:((.3,.3),(.7,.7)),
+		BottomTenth:((0,.90),(1,1)),
+		Sidebar:((.8,0),(1,1)), -- Epic specific
+		HyperspaceTitleBar:((0,0),(1,.031)), -- Epic specific (0,1,1920,58)
+		HyperspaceToolbar:((0,.031),(1,.054)), -- Epic specific
+		HyperspaceHorizontalTabbar:((0,.054),(1,.079)), -- Epic specific
+		HyperspaceTabbar:((0,0),(.065,1)), -- Epic specific (0,1,1920,85)
+		HyperspacePatientHeader:((0,.082),(1,.180)), -- Epic specific
+		HyperspaceVerticalMiddle:((.35,0),(.65,1)), -- Epic specific
+		CurrentPopup:((PopupUL_X,PopupUL_Y),(PopupBR_X,PopupBR_Y)), -- Epic specific, but can be modified for other UIs
+		CurrentPopupUL: ((.12,.026),(.35,.35)),
+		PreciseSidebar:((SidebarUL_X,SidebarUL_Y),(SidebarBR_X,SidebarBR_Y)), -- Epic specific
+		CoveragePayorPlanSummaryBox:((.222,.192),(.663,.30)), -- Epic specific
+		ClinicalDocumentationArea:((.13,.145),(.81,.95)), -- Epic specific
+		MessageViewerSegmentArea: ((.077,.15),(.11,.55)), -- Epic specific
+		Storyboard: ((0,.09),(.14,.96)), -- Epic specific
+		ChartReviewLeftPanel: ((.13,.21),(.45,.91)), -- Epic specific
+		ChartReviewRightPanel: ((.45,.21),(.77,.91)), -- Epic specific
+		NavigatorList: ((.119,.146),(.23,.96)), -- Epic specific
+		TabbedNoteTypes:((.12,.18),(.80,.216)), -- Epic specific
 		HyperspaceReportButtons:((0,.095),(1,.158)), -- Epic specific
 		IFS:((.220,.192),(.833,.962)), -- Epic specific
 		LoginSearchArea:((.343,.356),(.658,.574)), -- Epic specific

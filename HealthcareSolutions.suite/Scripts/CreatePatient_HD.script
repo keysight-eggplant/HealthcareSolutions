@@ -2,7 +2,7 @@
 
 global myRecordCount, myRecordCounter, myConnectionString, myCurrentPatient
 
-If EpicUsername = "" then
+(*If EpicUsername = "" then
 	Ask "In what environment are you testing?" with "Study May Q" title "Environment Name"
 	Put IT into EnvironmentName
 	Ask "What is the login user ID?" with "102697" title "Login User ID"
@@ -23,7 +23,7 @@ If EpicUsername = "" then
 	Put IT into StartingRecord
 	Ask "What record are you ending with?" with "1" title "Ending Record"
 	Put IT into EndingRecord
-End If
+End If*)
 
 //Bind data to Excel
 set global myConnectionString to (type:"Excel", file:ResourcePath("HDREG-1.xlsx"),name:"Current",writeable:yes)
